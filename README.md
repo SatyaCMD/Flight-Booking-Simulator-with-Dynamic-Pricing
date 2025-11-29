@@ -4,7 +4,6 @@
 ![Django](https://img.shields.io/badge/Django-Backend-green)
 ![Status](https://img.shields.io/badge/Status-Active-success)
 ![License](https://img.shields.io/badge/License-MIT-purple)
-![Stars](https://img.shields.io/github/stars/yourname/yourrepo?style=social)
 
 A fully functioning **dynamic airline fare simulator and booking platform** built using **Django**, capable of real-time price fluctuation, seat tracking, flight listings, and booking confirmation pages.
 
@@ -12,7 +11,7 @@ It mimics real airline pricing strategies using time-to-departure, demand, remai
 
 ---
 
-## 🌐 Live Demo 
+## 🌐 Live Website
 **Comming Soon**
 
 ---
@@ -95,13 +94,18 @@ python fix_bookings.py
 
 ### 🛠 Future Roadmap
 🔜 Add REST API using DRF
+
 🔜 Add JWT Authentication
+
 🔜 Add React frontend
+
 🔜 Implement email ticket sending
+
 🔜 Add PDF boarding pass generator
 
 ### 🤝 Contributing
 Pull requests are welcome!
+
 See docs/CONTRIBUTING.md
 
 ### 
