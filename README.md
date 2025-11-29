@@ -85,15 +85,23 @@ python manage.py runserver (It will run successfully on https://127.0.0.1:8000)
 
 ### 🔧 Debug Tools:-
 1.python debug_flights_script.py
+
 2.python debug_booking_model.py
+
 3.python debug_bookings.py
+
 4.python fix_bookings.py
+
 
 ### 🛠 Future Roadmap:-
 1.🔜 Add REST API using DRF
+
 2.🔜 Add JWT Authentication
+
 3.🔜 Add React frontend
+
 4.🔜 Implement email ticket sending
+
 5.🔜 Add PDF boarding pass generator
 
 ### 🤝 Contributing
