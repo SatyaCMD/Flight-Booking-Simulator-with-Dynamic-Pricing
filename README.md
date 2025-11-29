@@ -82,12 +82,15 @@ pip install -r requirements.txt
 python manage.py migrate
 
 ### 5. Run Server
-python manage.py runserver (It will run successfully on https://127.0.0.1:8000
+python manage.py runserver (It will run successfully on https://127.0.0.1:8000)
 
 ### 🔧 Debug Tools
 python debug_flights_script.py
+
 python debug_booking_model.py
+
 python debug_bookings.py
+
 python fix_bookings.py
 
 ### 🛠 Future Roadmap
