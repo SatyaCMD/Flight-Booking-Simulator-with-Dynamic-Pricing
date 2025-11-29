@@ -83,25 +83,18 @@ python manage.py migrate
 ### 5. Run Server
 python manage.py runserver (It will run successfully on https://127.0.0.1:8000)
 
-### 🔧 Debug Tools
-python debug_flights_script.py
+### 🔧 Debug Tools:-
+1.python debug_flights_script.py
+2.python debug_booking_model.py
+3.python debug_bookings.py
+4.python fix_bookings.py
 
-python debug_booking_model.py
-
-python debug_bookings.py
-
-python fix_bookings.py
-
-### 🛠 Future Roadmap
-🔜 Add REST API using DRF
-
-🔜 Add JWT Authentication
-
-🔜 Add React frontend
-
-🔜 Implement email ticket sending
-
-🔜 Add PDF boarding pass generator
+### 🛠 Future Roadmap:-
+1.🔜 Add REST API using DRF
+2.🔜 Add JWT Authentication
+3.🔜 Add React frontend
+4.🔜 Implement email ticket sending
+5.🔜 Add PDF boarding pass generator
 
 ### 🤝 Contributing
 Pull requests are welcome!
