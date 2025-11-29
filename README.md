@@ -12,9 +12,8 @@ It mimics real airline pricing strategies using time-to-departure, demand, remai
 
 ---
 
-## 🌐 Live Demo (Optional)
-> Add deployment link here  
-Example: **https://your-flight-app.vercel.app/**
+## 🌐 Live Demo 
+**Comming Soon**
 
 ---
 
@@ -47,7 +46,7 @@ Example: **https://your-flight-app.vercel.app/**
 - Remaining seat penalty  
 
 ---
-
+## 📁 Project Structure
 project/
 │── core/ # Django settings
 │── flights/ # Main business logic
@@ -69,11 +68,37 @@ project/
 ```bash
 git clone <repo-url>
 cd flight_simulator
+```
 
-**### 2. Create Virtual Environment**
-```python -m venv venv
+### 2. Create Virtual Environment
+python -m venv venv
 source venv/bin/activate     # Linux/Mac
 venv\Scripts\activate        # Windows
 
-## 📁 Project Structure
+### 3. Install Dependencies
+pip install -r requirements.txt
 
+### 4. Migrate Database
+python manage.py migrate
+
+### 5. Run Server
+python manage.py runserver (It will run successfully on https://127.0.0.1:8000
+
+### 🔧 Debug Tools
+python debug_flights_script.py
+python debug_booking_model.py
+python debug_bookings.py
+python fix_bookings.py
+
+### 🛠 Future Roadmap
+🔜 Add REST API using DRF
+🔜 Add JWT Authentication
+🔜 Add React frontend
+🔜 Implement email ticket sending
+🔜 Add PDF boarding pass generator
+
+### 🤝 Contributing
+Pull requests are welcome!
+See docs/CONTRIBUTING.md
+
+### 
