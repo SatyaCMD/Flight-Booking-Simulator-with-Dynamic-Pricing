@@ -46,6 +46,7 @@ It mimics real airline pricing strategies using time-to-departure, demand, remai
 
 ---
 ## 📁 Project Structure
+```bash
 project/
 │── core/ # Django settings
 │── flights/ # Main business logic
@@ -57,6 +58,7 @@ project/
 │── requirements.txt
 │── debug_*.py # Debug tools
 │── fix_bookings.py
+```
 
 
 ---
@@ -70,9 +72,11 @@ cd flight_simulator
 ```
 
 ### 2. Create Virtual Environment
+```bash
 python -m venv venv
 source venv/bin/activate     # Linux/Mac
 venv\Scripts\activate        # Windows
+```
 
 ### 3. Install Dependencies
 pip install -r requirements.txt
