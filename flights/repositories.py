@@ -1,4 +1,3 @@
-
 from datetime import datetime
 from typing import List, Optional
 from core.db import get_flights_collection
@@ -24,8 +23,6 @@ class FlightRepository:
             query['destination'] = destination.upper()
         
         if date:
-            # Simple date match (ignoring time for now, or matching the day)
-            # Assuming date string YYYY-MM-DD
             try:
                 start_date = datetime.strptime(date, "%Y-%m-%d")
                 end_date = start_date.replace(hour=23, minute=59, second=59)
@@ -34,7 +31,7 @@ class FlightRepository:
                     '$lte': end_date
                 }
             except ValueError:
-                pass # Ignore invalid date format for now
+                pass 
 
         print(f"DEBUG: Search Query: {query}")
         cursor = self.collection.find(query, {'_id': 0})
@@ -52,7 +49,6 @@ class FlightRepository:
         self.collection.delete_many({})
 
     def get_all_airports(self) -> List[str]:
-        # Get unique origins and destinations
         origins = self.collection.distinct('origin')
         destinations = self.collection.distinct('destination')
         return sorted(list(set(origins + destinations)))
@@ -69,3 +65,4 @@ class BookingRepository:
     def get_by_user(self, email: str) -> List[Booking]:
         cursor = self.collection.find({'user_email': email}, {'_id': 0})
         return [Booking(**doc) for doc in cursor]
+
