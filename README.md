@@ -53,7 +53,7 @@ project/
 │── flight_simulator/ # Backend helpers
 │── static/ # CSS/JS/Images
 │── templates/ # HTML templates
-│── docs/ # Documentation (generated)
+│── docs/ # Documentation 
 │── manage.py
 │── requirements.txt
 │── debug_*.py # Debug tools
@@ -79,38 +79,42 @@ venv\Scripts\activate        # Windows
 ```
 
 ### 3. Install Dependencies
+```bash
 pip install -r requirements.txt
+```
 
 ### 4. Migrate Database
+```bash
 python manage.py migrate
+```
 
 ### 5. Run Server
+```bash
 python manage.py runserver (It will run successfully on https://127.0.0.1:8000)
+```
 
 ### 🔧 Debug Tools:-
+```bash
 1.python debug_flights_script.py
-
 2.python debug_booking_model.py
-
 3.python debug_bookings.py
-
 4.python fix_bookings.py
+```
 
 
 ### 🛠 Future Roadmap:-
+```bash
 1.🔜 Add REST API using DRF
-
 2.🔜 Add JWT Authentication
-
 3.🔜 Add React frontend
-
 4.🔜 Implement email ticket sending
-
 5.🔜 Add PDF boarding pass generator
+```
 
 ### 🤝 Contributing
+```bash
 Pull requests are welcome!
-
 See docs/CONTRIBUTING.md
+```
 
 ### 
