@@ -33,7 +33,6 @@
         </div>
     </main>
 
-    <!-- Footer -->
     <footer
         style="background: rgba(0, 0, 0, 0.3); padding: 2rem 0; margin-top: auto; border-top: 1px solid rgba(255, 255, 255, 0.1);">
         <div class="container" style="flex-direction: column; align-items: center; gap: 1rem;">
@@ -118,7 +117,6 @@
                         container.appendChild(card);
                     });
 
-                    // Attach Cancel Listeners
                     document.querySelectorAll('.btn-cancel').forEach(btn => {
                         btn.addEventListener('click', async (e) => {
                             const bookingId = e.target.closest('button').dataset.id;
@@ -152,5 +150,4 @@
         });
     </script>
 </body>
-
 </html>
