@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,8 +68,6 @@
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
         }
-
-        /* Success Modal Animations */
         @keyframes modalFadeIn {
             from {
                 opacity: 0;
@@ -106,7 +103,6 @@
         }
     </style>
 </head>
-
 <body>
     <nav class="navbar">
         <div class="logo">
@@ -131,12 +127,10 @@
             <div class="step"><i class="fas fa-credit-card"></i>Payment </div>
         </div>
         <div class="booking-grid">
-            <!-- Left Column: Forms -->
             <div class="booking-form-section">
                 <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">Passenger Details</h2>
                 <form id="booking-form">
                     <div id="passengers-container">
-                        <!-- Passenger forms will be added here dynamically -->
                     </div><button type="button" id="add-passenger-btn" class="glass-panel"
                         style="width: 100%; padding: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; color: var(--primary-color); cursor: pointer; transition: all 0.2s; border: 1px dashed rgba(255, 215, 0, 0.3); background: transparent;"><i
                             class="fas fa-plus-circle"></i>Add Another Passenger </button>
@@ -163,7 +157,6 @@
                     </button>
                 </form>
             </div>
-            <!-- Right Column: Summary -->
             <div class="summary-card glass-panel" style="padding: 2rem;">
                 <h3
                     style="margin-bottom: 1.5rem; color: var(--text-main); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; font-size: 1.2rem;">
@@ -192,7 +185,6 @@
                             <div style="color: var(--text-main); font-weight: 500;" id="summary-airline"></div>
                         </div>
                     </div>
-                    <!-- Membership Redemption -->
                     <div
                         style="background: rgba(255, 215, 0, 0.05); padding: 1.25rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid rgba(255, 215, 0, 0.1);">
                         <div
@@ -231,7 +223,6 @@
             </div>
         </div>
     </main>
-    <!-- Footer -->
     <footer>
         <div class="container" style="text-align: center;">
             <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem;"><a href="#"
@@ -242,13 +233,11 @@
                 2025 SkyHigh Airlines. All rights reserved. </div>
         </div>
     </footer>
-    <!-- Success Modal -->
     <div id="success-modal" class="hidden"
         style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 2000; display: flex; align-items: center; justify-content: center;">
         <div class="glass-panel success-modal-content"
             style="background: linear-gradient(145deg, #112240, #0a192f); padding: 0; border-radius: 24px; text-align: center; max-width: 480px; width: 90%; border: 1px solid rgba(255, 215, 0, 0.3); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6); overflow: hidden;">
 
-            <!-- Header / Icon -->
             <div style="background: rgba(255, 215, 0, 0.05); padding: 3rem 2rem 2rem; position: relative;">
                 <div class="success-icon-circle"
                     style="width: 90px; height: 90px; background: linear-gradient(135deg, #34d399 0%, #10b981 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);">
@@ -256,7 +245,6 @@
                 </div>
             </div>
 
-            <!-- Content -->
             <div style="padding: 2rem 2.5rem 3rem;">
                 <h2
                     style="color: white; margin-bottom: 0.5rem; font-family: 'Outfit', sans-serif; font-size: 2rem; letter-spacing: -0.5px;">
@@ -264,7 +252,6 @@
                 <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 1.1rem;">You're all set! Your flight
                     has been successfully booked.</p>
 
-                <!-- Ticket Details -->
                 <div
                     style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem;">
                     <div
@@ -294,15 +281,11 @@
     <script src="/static/js/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            // Get Flight ID from URL
             const pathParts = window.location.pathname.split('/');
-            // Handle trailing slash
             let flightId = pathParts[pathParts.length - 1];
             if (!flightId) flightId = pathParts[pathParts.length - 2];
 
             console.log("Booking Flight ID:", flightId);
-
-            // Check Auth
             const userStr = localStorage.getItem('user');
 
             if (!userStr) {
@@ -318,11 +301,8 @@
 
             const passengersContainer = document.getElementById('passengers-container');
             const addPassengerBtn = document.getElementById('add-passenger-btn');
-
-            // Initialize with one passenger form
             addPassengerForm();
 
-            // Fetch Flight Details
             try {
                 const response = await fetch(`/api/flights/${flightId}/`);
                 if (!response.ok) {
@@ -332,7 +312,6 @@
 
                 flightDetails = await response.json();
 
-                // Update UI
                 document.getElementById('flight-loading').classList.add('hidden');
                 document.getElementById('flight-details').classList.remove('hidden');
 
@@ -402,7 +381,6 @@ ${count > 1 ? `<button type="button" class="remove-btn" style="background: none;
     </select>
 </div>
 </div>`;
-
                 passengersContainer.appendChild(div);
 
                 if (count > 1) {
@@ -426,7 +404,6 @@ ${count > 1 ? `<button type="button" class="remove-btn" style="background: none;
                 });
             }
 
-            // Membership Redemption
             const redeemBtn = document.getElementById('redeem-btn');
             const membershipInput = document.getElementById('membership-input');
             const discountMsg = document.getElementById('discount-msg');
@@ -480,7 +457,6 @@ ${count > 1 ? `<button type="button" class="remove-btn" style="background: none;
                 const tax = subtotal * taxRate;
                 const total = subtotal + tax;
 
-                // Update Breakdown
                 document.getElementById('price-breakdown-base').textContent = `$${(basePrice * count).toFixed(2)}`;
                 document.getElementById('price-breakdown-tax').textContent = `$${tax.toFixed(2)}`;
                 document.getElementById('summary-total').textContent = `$${total.toFixed(2)}`;
@@ -491,7 +467,6 @@ ${count > 1 ? `<button type="button" class="remove-btn" style="background: none;
                 }
             }
 
-            // Handle Form Submit
             const form = document.getElementById('booking-form');
 
             form.addEventListener('submit', async (e) => {
@@ -503,11 +478,7 @@ ${count > 1 ? `<button type="button" class="remove-btn" style="background: none;
                 btn.disabled = true;
                 btnText.textContent = 'Processing...';
                 spinner.classList.remove('hidden');
-
-                // Simulate Payment Delay
                 await new Promise(r => setTimeout(r, 1500));
-
-                // Collect Passenger Data
                 const passengers = [];
 
                 Array.from(passengersContainer.children).forEach((div) => {
@@ -544,7 +515,6 @@ ${count > 1 ? `<button type="button" class="remove-btn" style="background: none;
                     const result = await bookResponse.json();
 
                     if (bookResponse.ok) {
-                        // Show Success Modal
                         const modal = document.getElementById('success-modal');
                         document.getElementById('modal-pnr').textContent = result.booking.booking_reference;
                         document.getElementById('modal-txn').textContent = result.booking.transaction_id;
@@ -571,5 +541,6 @@ ${count > 1 ? `<button type="button" class="remove-btn" style="background: none;
         });
     </script>
 </body>
+
 
 </html>
