@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -124,7 +123,6 @@
 
     <main class="container" style="padding-top: 4rem; padding-bottom: 4rem;">
         <div class="profile-layout">
-            <!-- Sidebar -->
             <aside class="sidebar">
                 <div style="text-align: center; margin-bottom: 2rem;">
                     <div
@@ -147,7 +145,6 @@
                 </ul>
             </aside>
 
-            <!-- Main Content -->
             <div class="profile-content">
                 <h2 style="margin-bottom: 2rem;">Member Overview</h2>
 
@@ -320,7 +317,6 @@
 
                     <main class="container" style="padding-top: 4rem; padding-bottom: 4rem;">
                         <div class="profile-layout">
-                            <!-- Sidebar -->
                             <aside class="sidebar">
                                 <div style="text-align: center; margin-bottom: 2rem;">
                                     <div
@@ -344,7 +340,6 @@
                                 </ul>
                             </aside>
 
-                            <!-- Main Content -->
                             <div class="profile-content">
                                 <h2 style="margin-bottom: 2rem;">Member Overview</h2>
 
@@ -417,20 +412,15 @@
                             document.getElementById('profile-email').textContent = user.email;
                             document.getElementById('membership-id').textContent = user.membership_id || 'MEM-PENDING';
 
-                            // Fetch Bookings for Stats
                             try {
                                 const response = await fetch(`/api/flights/bookings/?email=${encodeURIComponent(user.email)}`);
                                 if (response.ok) {
                                     const bookings = await response.json();
-
-                                    // Update Total Flights
                                     document.querySelector('.stat-card:nth-child(1) div:last-child').textContent = bookings.length;
 
-                                    // Calculate Miles (e.g., 500 miles per booking)
                                     const miles = bookings.length * 500;
                                     document.querySelector('.stat-card:nth-child(2) div:last-child').textContent = miles.toLocaleString();
 
-                                    // Find Next Trip
                                     const now = new Date();
                                     const upcomingTrips = bookings
                                         .map(b => ({ ...b, date: new Date(b.booking_date) }))
@@ -463,5 +453,6 @@
                         });
                     </script>
                 </body>
+
 
 </html>
