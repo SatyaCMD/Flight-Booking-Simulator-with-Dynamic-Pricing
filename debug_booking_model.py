@@ -3,10 +3,8 @@ import sys
 import django
 from dataclasses import fields
 
-# Setup Django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'flight_simulator.settings')
 django.setup()
-
 from flights.models import Booking
 
 print("Booking fields:")
@@ -26,3 +24,4 @@ try:
     print("\nBooking instantiation successful!")
 except Exception as e:
     print(f"\nBooking instantiation failed: {e}")
+
