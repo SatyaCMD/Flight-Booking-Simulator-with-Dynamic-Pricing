@@ -1,0 +1,7 @@
+django>=5.0
+djangorestframework
+pymongo
+python-dotenv
+dj-database-url
+gunicorn
+bcrypt
