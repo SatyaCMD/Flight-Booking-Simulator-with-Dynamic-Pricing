@@ -1,0 +1,156 @@
+<title>My Trips | SkyHigh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/" style="text-decoration: none; color: inherit;">
+                <i class="fas fa-plane-departure"></i> SkyHigh
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="/">Book</a>
+            <a href="/my-trips/" class="active">My Trips</a>
+            <a href="/check-in/">Check-in</a>
+            <a href="/profile/" class="profile-link hidden">Profile</a>
+            <a href="/login/" class="login-btn">Login</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h1 style="margin-bottom: 2rem;">My Trips</h1>
+
+        <div id="trips-container" style="width: 100%; max-width: 900px;">
+            <div class="glass-panel" style="text-align: center; padding: 4rem;">
+                <div class="spinner"></div>
+                <p style="margin-top: 1rem; color: #94a3b8;">Loading your trips...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer
+        style="background: rgba(0, 0, 0, 0.3); padding: 2rem 0; margin-top: auto; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+        <div class="container" style="flex-direction: column; align-items: center; gap: 1rem;">
+            <div style="display: flex; gap: 2rem; color: #94a3b8;">
+                <a href="#" style="color: inherit; text-decoration: none;">About Us</a>
+                <a href="#" style="color: inherit; text-decoration: none;">Contact</a>
+                <a href="#" style="color: inherit; text-decoration: none;">Privacy Policy</a>
+                <a href="#" style="color: inherit; text-decoration: none;">Terms of Service</a>
+            </div>
+            <div style="color: #64748b; font-size: 0.9rem;">
+                &copy; 2025 SkyHigh Airlines. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                window.location.href = '/login/';
+                return;
+            }
+            const user = JSON.parse(userStr);
+            const container = document.getElementById('trips-container');
+
+            try {
+                const response = await fetch(`/api/flights/bookings/?email=${encodeURIComponent(user.email)}`);
+                if (!response.ok) throw new Error('Failed to fetch bookings');
+                const bookings = await response.json();
+
+                if (bookings.length === 0) {
+                    container.innerHTML = `
+        <div class="glass-panel" style="text-align: center; padding: 4rem;">
+            <i class="fas fa-suitcase-rolling" style="font-size: 4rem; color: #64748b; margin-bottom: 1.5rem;"></i>
+            <h3>No upcoming trips</h3>
+            <p style="color: #94a3b8; margin-bottom: 2rem;">You haven't booked any flights yet.</p>
+            <a href="/" class="search-btn" style="display: inline-flex; text-decoration: none;">Book a Flight</a>
+        </div>
+    `;
+                } else {
+                    container.innerHTML = '';
+                    bookings.forEach(booking => {
+                        const date = new Date(booking.booking_date).toLocaleDateString();
+                        const card = document.createElement('div');
+                        card.className = 'glass-panel';
+                        card.style.marginBottom = '1.5rem';
+                        card.style.padding = '1.5rem';
+                        card.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 0.5rem;">
+                        PNR: <span style="color: var(--primary-color); font-weight: 700; margin-right: 1rem;">${booking.booking_reference}</span>
+                        <span style="font-size: 0.8rem; opacity: 0.7;">TXN: ${booking.transaction_id || 'N/A'}</span>
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Flight ${booking.flight_number}</h3>
+                    <div style="color: #cbd5e1;">Booked on ${date}</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.85rem; display: inline-block; margin-bottom: 0.5rem;">
+                        ${booking.status}
+                    </div>
+                    <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 0.5rem;">${booking.passenger_details.length} Passenger(s)</div>
+                    <button class="btn-cancel" data-id="${booking.transaction_id || booking.booking_reference}" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 0.25rem 0.75rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem; transition: all 0.2s;">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                <h4 style="font-size: 1rem; margin-bottom: 0.5rem; color: #94a3b8;">Passengers</h4>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    ${booking.passenger_details.map(p => `
+                        <div style="background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.75rem;">
+                            <div><i class="fas fa-user" style="color: #94a3b8;"></i> ${p.name}</div>
+                            <div style="height: 15px; width: 1px; background: rgba(255,255,255,0.2);"></div>
+                            <div style="color: var(--primary-color); font-weight: 600;"><i class="fas fa-chair" style="font-size: 0.8rem; margin-right: 0.3rem;"></i> ${p.seat_number || 'Unassigned'}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+                        container.appendChild(card);
+                    });
+
+                    // Attach Cancel Listeners
+                    document.querySelectorAll('.btn-cancel').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            const bookingId = e.target.closest('button').dataset.id;
+                            if (confirm('Are you sure you want to cancel this booking? This action cannot be undone.')) {
+                                try {
+                                    const res = await fetch(`/api/flights/bookings/cancel/${bookingId}/`, {
+                                        method: 'POST'
+                                    });
+                                    if (res.ok) {
+                                        alert('Booking cancelled successfully.');
+                                        window.location.reload();
+                                    } else {
+                                        alert('Failed to cancel booking.');
+                                    }
+                                } catch (err) {
+                                    console.error(err);
+                                    alert('Error cancelling booking.');
+                                }
+                            }
+                        });
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `
+    <div class="glass-panel" style="text-align: center; padding: 2rem;">
+        <p style="color: #ef4444;">Failed to load trips. Please try again later.</p>
+    </div>
+`;
+            }
+        });
+    </script>
+</body>
+
+</html>

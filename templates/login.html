@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | SkyHigh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-plane-departure"></i> SkyHigh
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="/">Book Flight</a>
+            <a href="/my-trips/">My Trips</a>
+            <a href="/check-in/">Check-in</a>
+            <a href="/profile/" class="profile-link hidden">Profile</a>
+            <a href="/login/" class="login-btn btn btn-primary" style="padding: 0.5rem 1.2rem;">Login</a>
+        </div>
+    </nav>
+
+    <main class="container" style="justify-content: center; min-height: 80vh; align-items: center; display: flex;">
+        <div class="glass-panel" style="max-width: 450px; width: 100%; padding: 2.5rem;">
+
+            <!-- Login Form -->
+            <div id="login-container">
+                <h2 style="text-align: center; margin-bottom: 0.5rem; font-size: 2rem;">Welcome Back</h2>
+                <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Enter your details to
+                    access your account</p>
+
+                <form id="login-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                    <div class="form-group">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" name="email" placeholder="name@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" name="password" placeholder="Enter your password"
+                            required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1rem;">
+                        <span class="btn-text">Sign In</span>
+                        <div class="spinner hidden"></div>
+                    </button>
+                    <div id="login-error"
+                        style="color: var(--danger-color); text-align: center; font-size: 0.9rem; display: none; background: rgba(239, 68, 68, 0.1); padding: 0.75rem; border-radius: 8px;">
+                    </div>
+                </form>
+                <p style="text-align: center; margin-top: 2rem; color: var(--text-muted); font-size: 0.95rem;">
+                    Don't have an account? <a href="#" id="show-signup"
+                        style="color: var(--primary-color); font-weight: 600;">Sign up</a>
+                </p>
+            </div>
+
+            <!-- OTP Form -->
+            <div id="otp-container" class="hidden">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div
+                        style="width: 60px; height: 60px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: var(--primary-color); font-size: 1.5rem;">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h2 style="margin-bottom: 0.5rem;">Verification</h2>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">
+                        We've sent a 6-digit code to your email.
+                    </p>
+                </div>
+
+                <!-- Debug OTP Display -->
+                <div
+                    style="background: rgba(234, 179, 8, 0.1); color: #fbbf24; padding: 0.75rem; border-radius: 8px; text-align: center; margin-bottom: 2rem; border: 1px dashed rgba(234, 179, 8, 0.3); font-size: 0.9rem;">
+                    <i class="fas fa-bug" style="margin-right: 0.5rem;"></i> DEBUG: OTP is <strong id="debug-otp-value"
+                        style="font-family: monospace; font-size: 1.1rem;"></strong>
+                </div>
+
+                <form id="otp-form" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <input type="hidden" id="otp-email" name="email">
+                    <div class="form-group">
+                        <input type="text" id="otp-input" name="otp" placeholder="000000" required maxlength="6"
+                            style="text-align: center; letter-spacing: 0.5rem; font-size: 2rem; font-weight: 700; padding: 1rem;">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">
+                        <span class="btn-text">Verify & Login</span>
+                        <div class="spinner hidden"></div>
+                    </button>
+                    <div id="otp-error"
+                        style="color: var(--danger-color); text-align: center; font-size: 0.9rem; display: none; background: rgba(239, 68, 68, 0.1); padding: 0.75rem; border-radius: 8px;">
+                    </div>
+                </form>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signup-container" class="hidden">
+                <h2 style="text-align: center; margin-bottom: 0.5rem; font-size: 2rem;">Create Account</h2>
+                <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Join SkyHigh for premium
+                    travel</p>
+
+                <form id="signup-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                    <div class="form-group">
+                        <label for="signup-name">Full Name</label>
+                        <input type="text" id="signup-name" name="name" placeholder="e.g. John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email Address</label>
+                        <input type="email" id="signup-email" name="email" placeholder="name@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" name="password"
+                            placeholder="Create a strong password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1rem;">
+                        <span class="btn-text">Create Account</span>
+                        <div class="spinner hidden"></div>
+                    </button>
+                    <div id="signup-error"
+                        style="color: var(--danger-color); text-align: center; font-size: 0.9rem; display: none; background: rgba(239, 68, 68, 0.1); padding: 0.75rem; border-radius: 8px;">
+                    </div>
+                </form>
+                <p style="text-align: center; margin-top: 2rem; color: var(--text-muted); font-size: 0.95rem;">
+                    Already have an account? <a href="#" id="show-login"
+                        style="color: var(--primary-color); font-weight: 600;">Sign in</a>
+                    <!DOCTYPE html>
+                    <html lang="en">
+
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Login | SkyHigh</title>
+                        <link rel="preconnect" href="https://fonts.googleapis.com">
+                        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                        <link
+                            href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+                            rel="stylesheet">
+                        <link rel="stylesheet" href="/static/css/style.css">
+                        <link rel="stylesheet"
+                            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                    </head>
+
+                    <body>
+                        <nav class="navbar">
+                            <div class="logo">
+                                <a href="/"
+                                    style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-plane-departure"></i> SkyHigh
+                                </a>
+                            </div>
+                            <div class="nav-links">
+                                <a href="/">Book Flight</a>
+                                <a href="/my-trips/">My Trips</a>
+                                <a href="/check-in/">Check-in</a>
+                                <a href="/profile/" class="profile-link hidden">Profile</a>
+                                <a href="/login/" class="login-btn btn btn-primary"
+                                    style="padding: 0.5rem 1.2rem;">Login</a>
+                            </div>
+                        </nav>
+
+                        <main class="container"
+                            style="justify-content: center; min-height: 80vh; align-items: center; display: flex;">
+                            <div class="glass-panel" style="max-width: 450px; width: 100%; padding: 2.5rem;">
+
+                                <!-- Login Form -->
+                                <div id="login-container">
+                                    <h2 style="text-align: center; margin-bottom: 0.5rem; font-size: 2rem;">Welcome Back
+                                    </h2>
+                                    <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Enter
+                                        your details to
+                                        access your account</p>
+
+                                    <form id="login-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                                        <div class="form-group">
+                                            <label for="login-email">Email Address</label>
+                                            <input type="email" id="login-email" name="email"
+                                                placeholder="name@example.com" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="login-password">Password</label>
+                                            <input type="password" id="login-password" name="password"
+                                                placeholder="Enter your password" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary"
+                                            style="width: 100%; padding: 1rem; font-size: 1rem;">
+                                            <span class="btn-text">Sign In</span>
+                                            <div class="spinner hidden"></div>
+                                        </button>
+                                        <div id="login-error"
+                                            style="color: var(--danger-color); text-align: center; font-size: 0.9rem; display: none; background: rgba(239, 68, 68, 0.1); padding: 0.75rem; border-radius: 8px;">
+                                        </div>
+                                    </form>
+                                    <p
+                                        style="text-align: center; margin-top: 2rem; color: var(--text-muted); font-size: 0.95rem;">
+                                        Don't have an account? <a href="#" id="show-signup"
+                                            style="color: var(--primary-color); font-weight: 600;">Sign up</a>
+                                    </p>
+                                </div>
+
+                                <!-- OTP Form -->
+                                <div id="otp-container" class="hidden">
+                                    <div style="text-align: center; margin-bottom: 2rem;">
+                                        <div
+                                            style="width: 60px; height: 60px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: var(--primary-color); font-size: 1.5rem;">
+                                            <i class="fas fa-shield-alt"></i>
+                                        </div>
+                                        <h2 style="margin-bottom: 0.5rem;">Verification</h2>
+                                        <p style="color: var(--text-muted); font-size: 0.95rem;">
+                                            We've sent a 6-digit code to your email.
+                                        </p>
+                                    </div>
+
+                                    <!-- Debug OTP Display -->
+                                    <div
+                                        style="background: rgba(234, 179, 8, 0.1); color: #fbbf24; padding: 0.75rem; border-radius: 8px; text-align: center; margin-bottom: 2rem; border: 1px dashed rgba(234, 179, 8, 0.3); font-size: 0.9rem;">
+                                        <i class="fas fa-bug" style="margin-right: 0.5rem;"></i> DEBUG: OTP is <strong
+                                            id="debug-otp-value"
+                                            style="font-family: monospace; font-size: 1.1rem;"></strong>
+                                    </div>
+
+                                    <form id="otp-form" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                        <input type="hidden" id="otp-email" name="email">
+                                        <div class="form-group">
+                                            <input type="text" id="otp-input" name="otp" placeholder="000000" required
+                                                maxlength="6"
+                                                style="text-align: center; letter-spacing: 0.5rem; font-size: 2rem; font-weight: 700; padding: 1rem;">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary"
+                                            style="width: 100%; padding: 1rem;">
+                                            <span class="btn-text">Verify & Login</span>
+                                            <div class="spinner hidden"></div>
+                                        </button>
+                                        <div id="otp-error"
+                                            style="color: var(--danger-color); text-align: center; font-size: 0.9rem; display: none; background: rgba(239, 68, 68, 0.1); padding: 0.75rem; border-radius: 8px;">
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Signup Form -->
+                                <div id="signup-container" class="hidden">
+                                    <h2 style="text-align: center; margin-bottom: 0.5rem; font-size: 2rem;">Create
+                                        Account</h2>
+                                    <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Join
+                                        SkyHigh for premium
+                                        travel</p>
+
+                                    <form id="signup-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                                        <div class="form-group">
+                                            <label for="signup-name">Full Name</label>
+                                            <input type="text" id="signup-name" name="name" placeholder="e.g. John Doe"
+                                                required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="signup-email">Email Address</label>
+                                            <input type="email" id="signup-email" name="email"
+                                                placeholder="name@example.com" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="signup-password">Password</label>
+                                            <input type="password" id="signup-password" name="password"
+                                                placeholder="Create a strong password" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary"
+                                            style="width: 100%; padding: 1rem; font-size: 1rem;">
+                                            <span class="btn-text">Create Account</span>
+                                            <div class="spinner hidden"></div>
+                                        </button>
+                                        <div id="signup-error"
+                                            style="color: var(--danger-color); text-align: center; font-size: 0.9rem; display: none; background: rgba(239, 68, 68, 0.1); padding: 0.75rem; border-radius: 8px;">
+                                        </div>
+                                    </form>
+                                    <p
+                                        style="text-align: center; margin-top: 2rem; color: var(--text-muted); font-size: 0.95rem;">
+                                        Already have an account? <a href="#" id="show-login"
+                                            style="color: var(--primary-color); font-weight: 600;">Sign in</a>
+                                    </p>
+                                </div>
+
+                            </div>
+                        </main>
+
+                        <!-- Footer -->
+                        <footer>
+                            <div class="container" style="text-align: center;">
+                                <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem;">
+                                    <a href="#" style="color: var(--text-muted);">About Us</a>
+                                    <a href="#" style="color: var(--text-muted);">Contact</a>
+                                    <a href="#" style="color: var(--text-muted);">Privacy Policy</a>
+                                    <a href="#" style="color: var(--text-muted);">Terms of Service</a>
+                                </div>
+                                <div style="color: var(--text-light); font-size: 0.9rem;">
+                                    &copy; 2025 SkyHigh Airlines. All rights reserved.
+                                </div>
+                            </div>
+                        </footer>
+
+                        <script src="/static/js/app.js"></script>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', () => {
+                                const loginContainer = document.getElementById('login-container');
+                                const signupContainer = document.getElementById('signup-container');
+                                const otpContainer = document.getElementById('otp-container');
+                                const showSignupBtn = document.getElementById('show-signup');
+                                const showLoginBtn = document.getElementById('show-login');
+
+                                // Toggle Forms
+                                showSignupBtn.addEventListener('click', (e) => {
+                                    e.preventDefault();
+                                    loginContainer.classList.add('hidden');
+                                    signupContainer.classList.remove('hidden');
+                                    otpContainer.classList.add('hidden');
+                                });
+
+                                showLoginBtn.addEventListener('click', (e) => {
+                                    e.preventDefault();
+                                    signupContainer.classList.add('hidden');
+                                    loginContainer.classList.remove('hidden');
+                                    otpContainer.classList.add('hidden');
+                                });
+
+                                // Handle Login
+                                const loginForm = document.getElementById('login-form');
+                                loginForm.addEventListener('submit', async (e) => {
+                                    e.preventDefault();
+                                    const btn = loginForm.querySelector('button');
+                                    const spinner = btn.querySelector('.spinner');
+                                    const errorDiv = document.getElementById('login-error');
+
+                                    btn.disabled = true;
+                                    spinner.classList.remove('hidden');
+                                    errorDiv.style.display = 'none';
+
+                                    const formData = new FormData(loginForm);
+                                    const data = Object.fromEntries(formData.entries());
+
+                                    try {
+                                        const response = await fetch('/api/flights/auth/login/', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify(data)
+                                        });
+                                        const result = await response.json();
+
+                                        if (response.ok) {
+                                            if (result.status === 'OTP_REQUIRED') {
+                                                // Switch to OTP Form
+                                                loginContainer.classList.add('hidden');
+                                                otpContainer.classList.remove('hidden');
+                                                document.getElementById('otp-email').value = result.email;
+                                                document.getElementById('debug-otp-value').textContent = result.debug_otp;
+                                            } else {
+                                                // Direct login (fallback)
+                                                localStorage.setItem('user', JSON.stringify(result.user));
+                                                window.location.href = '/';
+                                            }
+                                        } else {
+                                            errorDiv.textContent = result.error || 'Login failed';
+                                            errorDiv.style.display = 'block';
+                                        }
+                                    } catch (err) {
+                                        errorDiv.textContent = 'An error occurred. Please try again.';
+                                        errorDiv.style.display = 'block';
+                                    } finally {
+                                        btn.disabled = false;
+                                        spinner.classList.add('hidden');
+                                    }
+                                });
+
+                                // Handle OTP Verification
+                                const otpForm = document.getElementById('otp-form');
+                                otpForm.addEventListener('submit', async (e) => {
+                                    e.preventDefault();
+                                    const btn = otpForm.querySelector('button');
+                                    const spinner = btn.querySelector('.spinner');
+                                    const errorDiv = document.getElementById('otp-error');
+
+                                    btn.disabled = true;
+                                    spinner.classList.remove('hidden');
+                                    errorDiv.style.display = 'none';
+
+                                    const formData = new FormData(otpForm);
+                                    const data = Object.fromEntries(formData.entries());
+
+                                    try {
+                                        const response = await fetch('/api/flights/auth/verify-otp/', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify(data)
+                                        });
+                                        const result = await response.json();
+
+                                        if (response.ok) {
+                                            // Success - Redirect to home
+                                            localStorage.setItem('user', JSON.stringify(result.user));
+                                            window.location.href = '/';
+                                        } else {
+                                            errorDiv.textContent = result.error || 'Verification failed';
+                                            errorDiv.style.display = 'block';
+                                        }
+                                    } catch (err) {
+                                        errorDiv.textContent = 'An error occurred. Please try again.';
+                                        errorDiv.style.display = 'block';
+                                    } finally {
+                                        btn.disabled = false;
+                                        spinner.classList.add('hidden');
+                                    }
+                                });
+
+                                // Handle Signup
+                                const signupForm = document.getElementById('signup-form');
+                                signupForm.addEventListener('submit', async (e) => {
+                                    e.preventDefault();
+                                    const btn = signupForm.querySelector('button');
+                                    const spinner = btn.querySelector('.spinner');
+                                    const errorDiv = document.getElementById('signup-error');
+
+                                    btn.disabled = true;
+                                    spinner.classList.remove('hidden');
+                                    errorDiv.style.display = 'none';
+
+                                    const formData = new FormData(signupForm);
+                                    const data = Object.fromEntries(formData.entries());
+
+                                    try {
+                                        const response = await fetch('/api/flights/auth/signup/', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify(data)
+                                        });
+                                        const result = await response.json();
+
+                                        if (response.ok) {
+                                            // Success - Switch to login or auto-login
+                                            alert('Account created! Please login.');
+                                            signupContainer.classList.add('hidden');
+                                            loginContainer.classList.remove('hidden');
+                                        } else {
+                                            errorDiv.textContent = result.error || 'Signup failed';
+                                            errorDiv.style.display = 'block';
+                                        }
+                                    } catch (err) {
+                                        errorDiv.textContent = 'An error occurred. Please try again.';
+                                        errorDiv.style.display = 'block';
+                                    } finally {
+                                        btn.disabled = false;
+                                        spinner.classList.add('hidden');
+                                    }
+                                });
+                            });
+                        </script>
+                    </body>
+
+                    </html>

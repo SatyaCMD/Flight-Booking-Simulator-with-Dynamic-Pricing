@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyHigh | Premium Flight Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom Flatpickr Theme for Deep Navy & Gold */
+        .flatpickr-calendar {
+            background: #0a192f !important;
+            border: 1px solid rgba(255, 215, 0, 0.2) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .flatpickr-day.selected,
+        .flatpickr-day.startRange,
+        .flatpickr-day.endRange,
+        .flatpickr-day.selected.inRange,
+        .flatpickr-day.startRange.inRange,
+        .flatpickr-day.endRange.inRange,
+        .flatpickr-day.selected:focus,
+        .flatpickr-day.startRange:focus,
+        .flatpickr-day.endRange:focus,
+        .flatpickr-day.selected:hover,
+        .flatpickr-day.startRange:hover,
+        .flatpickr-day.endRange:hover,
+        .flatpickr-day.selected.prevMonthDay,
+        .flatpickr-day.startRange.prevMonthDay,
+        .flatpickr-day.endRange.prevMonthDay,
+        .flatpickr-day.selected.nextMonthDay,
+        .flatpickr-day.startRange.nextMonthDay,
+        .flatpickr-day.endRange.nextMonthDay {
+            background: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+            color: #0a192f !important;
+            font-weight: 700;
+        }
+
+        .flatpickr-day:hover {
+            background: rgba(255, 215, 0, 0.1) !important;
+        }
+
+        .flatpickr-months .flatpickr-month {
+            background: #0a192f !important;
+            color: var(--text-main) !important;
+            fill: var(--text-main) !important;
+        }
+
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            background: #0a192f !important;
+        }
+
+        .flatpickr-weekday {
+            color: var(--text-muted) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-plane-departure"></i> SkyHigh
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="/">Book Flight</a>
+            <a href="/my-trips/">My Trips</a>
+            <a href="/check-in/">Check-in</a>
+            <a href="/profile/" class="profile-link hidden">Profile</a>
+            <a href="/login/" class="login-btn btn btn-primary" style="padding: 0.5rem 1.2rem;">Login</a>
+        </div>
+    </nav>
+
+    <main class="container" style="flex-direction: column; justify-content: center; min-height: 85vh;">
+        <div class="hero-section" style="text-align: center; margin-bottom: 3rem;">
+            <h1
+                style="font-size: 3.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Experience Premium Travel
+            </h1>
+            <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+                Discover the world with unparalleled comfort and style. Your journey begins here.
+            </p>
+        </div>
+
+        <div class="glass-panel" style="padding: 2rem; max-width: 1000px; width: 100%; margin: 0 auto;">
+            <form id="search-form" class="search-form">
+                <div class="form-group">
+                    <label><i class="fas fa-plane-departure"></i> From</label>
+                    <div style="position: relative;">
+                        <input type="text" name="origin" placeholder="City or Airport" required list="airports-list"
+                            autocomplete="off" style="padding-left: 2.5rem;">
+                        <i class="fas fa-map-marker-alt"
+                            style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-plane-arrival"></i> To</label>
+                    <div style="position: relative;">
+                        <input type="text" name="destination" placeholder="City or Airport" required
+                            list="airports-list" autocomplete="off" style="padding-left: 2.5rem;">
+                        <i class="fas fa-map-marker-alt"
+                            style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-alt"></i> Date</label>
+                    <div style="position: relative;">
+                        <input type="text" id="date" name="date" placeholder="Select Date" required
+                            style="padding-left: 2.5rem; background: rgba(255, 255, 255, 0.05);">
+                        <i class="fas fa-calendar"
+                            style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                    </div>
+                </div>
+                <button type="submit" class="search-btn">
+                    <span class="btn-text">Search Flights</span>
+                    <div class="spinner hidden"></div>
+                </button>
+            </form>
+            <datalist id="airports-list"></datalist>
+        </div>
+
+        <div id="results-container" class="results-grid hidden">
+            <!-- Results will be injected here -->
+        </div>
+    </main>
+
+    <footer>
+        <div class="container" style="text-align: center;">
+            <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem;">
+                <a href="#" style="color: var(--text-muted);">About Us</a>
+                <a href="#" style="color: var(--text-muted);">Contact</a>
+                <a href="#" style="color: var(--text-muted);">Privacy Policy</a>
+                <a href="#" style="color: var(--text-muted);">Terms of Service</a>
+            </div>
+            <div style="color: var(--text-light); font-size: 0.9rem;">
+                &copy; 2025 SkyHigh Airlines. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="/static/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            flatpickr("#date", {
+                minDate: "today",
+                dateFormat: "Y-m-d",
+                theme: "dark",
+                disableMobile: "true",
+                defaultDate: "today"
+            });
+        });
+    </script>
+</body>
+
+</html>

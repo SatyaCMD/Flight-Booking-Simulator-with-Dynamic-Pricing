@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | SkyHigh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            min-height: 80vh;
+        }
+
+        .sidebar {
+            background: var(--bg-card);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 8px;
+            height: fit-content;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--primary-color);
+        }
+
+        .membership-card {
+            background: linear-gradient(135deg, #0a192f 0%, #112240 100%);
+            border: 1px solid var(--primary-color);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .membership-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .card-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            font-family: 'Fira Code', monospace;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(17, 34, 64, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-plane-departure"></i> SKYHIGH
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="/">BOOK FLIGHT</a>
+            <a href="/my-trips/">MY TRIPS</a>
+            <a href="/check-in/">CHECK-IN</a>
+            <a href="/profile/" class="profile-link hidden active">PROFILE</a>
+            <a href="/login/" class="login-btn btn btn-primary">LOGIN</a>
+        </div>
+    </nav>
+
+    <main class="container" style="padding-top: 4rem; padding-bottom: 4rem;">
+        <div class="profile-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div
+                        style="width: 80px; height: 80px; background: rgba(255, 215, 0, 0.1); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--primary-color); border: 1px solid var(--primary-color);">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 id="profile-name" style="font-size: 1.2rem; margin-bottom: 0.25rem;">Loading...</h3>
+                    <p id="profile-email" style="font-size: 0.9rem; color: var(--text-muted);">...</p>
+                </div>
+
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active"><i class="fas fa-chart-pie"></i> Overview</a></li>
+                    <li><a href="/my-trips/"><i class="fas fa-ticket-alt"></i> My Bookings</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li style="margin-top: 2rem;">
+                        <a href="#" id="logout-btn" style="color: var(--danger-color);">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="profile-content">
+                <h2 style="margin-bottom: 2rem;">Member Overview</h2>
+
+                <div class="membership-card">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3rem;">
+                        <div>
+                            <div class="logo" style="font-size: 1.2rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-plane-departure"></i> SKYHIGH
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--primary-color); letter-spacing: 1px;">PREMIUM
+                                MEMBER</div>
+                        </div>
+                        <i class="fas fa-chip" style="font-size: 2rem; color: rgba(255, 255, 255, 0.2);"></i>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div>
+                            <div class="card-label">Membership ID</div>
+                            <div class="card-value" id="membership-id">....</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="card-label">Status</div>
+                            <div style="color: var(--primary-color); font-weight: 700;">GOLD TIER</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div style="color: var(--text-muted); margin-bottom: 0.5rem;">Total Flights</div>
+                        <div style="font-size: 2rem; font-weight: 700;">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div style="color: var(--text-muted); margin-bottom: 0.5rem;">Miles Earned</div>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div style="color: var(--text-muted); margin-bottom: 0.5rem;">Next Trip</div>
+                        <div style="font-size: 1.1rem; font-weight: 600;">No upcoming trips</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div style="opacity: 0.6; text-align: center;">
+                &copy; 2025 SKYHIGH AIRLINES. ALL RIGHTS RESERVED.
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>My Profile | SkyHigh</title>
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link
+                    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+                    rel="stylesheet">
+                <link rel="stylesheet" href="/static/css/style.css">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                <style>
+                    .profile-layout {
+                        display: grid;
+                        grid-template-columns: 280px 1fr;
+                        gap: 2rem;
+                        min-height: 80vh;
+                    }
+
+                    .sidebar {
+                        background: var(--bg-card);
+                        border-right: 1px solid rgba(255, 255, 255, 0.05);
+                        padding: 2rem;
+                        border-radius: 8px;
+                        height: fit-content;
+                    }
+
+                    .sidebar-menu {
+                        list-style: none;
+                        margin-top: 2rem;
+                    }
+
+                    .sidebar-menu li {
+                        margin-bottom: 0.5rem;
+                    }
+
+                    .sidebar-menu a {
+                        display: flex;
+                        align-items: center;
+                        gap: 1rem;
+                        padding: 1rem;
+                        border-radius: 8px;
+                        color: var(--text-muted);
+                        transition: all 0.2s;
+                        font-weight: 500;
+                    }
+
+                    .sidebar-menu a:hover,
+                    .sidebar-menu a.active {
+                        background: rgba(255, 215, 0, 0.1);
+                        color: var(--primary-color);
+                    }
+
+                    .membership-card {
+                        background: linear-gradient(135deg, #0a192f 0%, #112240 100%);
+                        border: 1px solid var(--primary-color);
+                        border-radius: 16px;
+                        padding: 2rem;
+                        position: relative;
+                        overflow: hidden;
+                        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+                    }
+
+                    .membership-card::before {
+                        content: '';
+                        position: absolute;
+                        top: -50px;
+                        right: -50px;
+                        width: 150px;
+                        height: 150px;
+                        background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+                        border-radius: 50%;
+                    }
+
+                    .card-label {
+                        font-size: 0.75rem;
+                        text-transform: uppercase;
+                        letter-spacing: 2px;
+                        color: var(--text-muted);
+                        margin-bottom: 0.5rem;
+                    }
+
+                    .card-value {
+                        font-size: 1.5rem;
+                        font-weight: 700;
+                        color: var(--text-main);
+                        font-family: 'Fira Code', monospace;
+                    }
+
+                    .stat-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                        gap: 1.5rem;
+                        margin-top: 2rem;
+                    }
+
+                    .stat-card {
+                        background: rgba(17, 34, 64, 0.5);
+                        border: 1px solid rgba(255, 255, 255, 0.05);
+                        padding: 1.5rem;
+                        border-radius: 8px;
+                    }
+                </style>
+                </head>
+
+                <body>
+                    <nav class="navbar">
+                        <div class="logo">
+                            <a href="/"
+                                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-plane-departure"></i> SKYHIGH
+                            </a>
+                        </div>
+                        <div class="nav-links">
+                            <a href="/">BOOK FLIGHT</a>
+                            <a href="/my-trips/">MY TRIPS</a>
+                            <a href="/check-in/">CHECK-IN</a>
+                            <a href="/profile/" class="profile-link hidden active">PROFILE</a>
+                            <a href="/login/" class="login-btn btn btn-primary">LOGIN</a>
+                        </div>
+                    </nav>
+
+                    <main class="container" style="padding-top: 4rem; padding-bottom: 4rem;">
+                        <div class="profile-layout">
+                            <!-- Sidebar -->
+                            <aside class="sidebar">
+                                <div style="text-align: center; margin-bottom: 2rem;">
+                                    <div
+                                        style="width: 80px; height: 80px; background: rgba(255, 215, 0, 0.1); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--primary-color); border: 1px solid var(--primary-color);">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <h3 id="profile-name" style="font-size: 1.2rem; margin-bottom: 0.25rem;">Loading...
+                                    </h3>
+                                    <p id="profile-email" style="font-size: 0.9rem; color: var(--text-muted);">...</p>
+                                </div>
+
+                                <ul class="sidebar-menu">
+                                    <li><a href="#" class="active"><i class="fas fa-chart-pie"></i> Overview</a></li>
+                                    <li><a href="/my-trips/"><i class="fas fa-ticket-alt"></i> My Bookings</a></li>
+                                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                                    <li style="margin-top: 2rem;">
+                                        <a href="#" id="logout-btn" style="color: var(--danger-color);">
+                                            <i class="fas fa-sign-out-alt"></i> Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </aside>
+
+                            <!-- Main Content -->
+                            <div class="profile-content">
+                                <h2 style="margin-bottom: 2rem;">Member Overview</h2>
+
+                                <div class="membership-card">
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3rem;">
+                                        <div>
+                                            <div class="logo" style="font-size: 1.2rem; margin-bottom: 0.5rem;">
+                                                <i class="fas fa-plane-departure"></i> SKYHIGH
+                                            </div>
+                                            <div
+                                                style="font-size: 0.8rem; color: var(--primary-color); letter-spacing: 1px;">
+                                                PREMIUM
+                                                MEMBER</div>
+                                        </div>
+                                        <i class="fas fa-chip"
+                                            style="font-size: 2rem; color: rgba(255, 255, 255, 0.2);"></i>
+                                    </div>
+
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                        <div>
+                                            <div class="card-label">Membership ID</div>
+                                            <div class="card-value" id="membership-id">....</div>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <div class="card-label">Status</div>
+                                            <div style="color: var(--primary-color); font-weight: 700;">GOLD TIER</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-grid">
+                                    <div class="stat-card">
+                                        <div style="color: var(--text-muted); margin-bottom: 0.5rem;">Total Flights
+                                        </div>
+                                        <div style="font-size: 2rem; font-weight: 700;">0</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div style="color: var(--text-muted); margin-bottom: 0.5rem;">Miles Earned</div>
+                                        <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);">0
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div style="color: var(--text-muted); margin-bottom: 0.5rem;">Next Trip</div>
+                                        <div style="font-size: 1.1rem; font-weight: 600;">No upcoming trips</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+
+                    <footer>
+                        <div class="container">
+                            <div style="opacity: 0.6; text-align: center;">
+                                &copy; 2025 SKYHIGH AIRLINES. ALL RIGHTS RESERVED.
+                            </div>
+                        </div>
+                    </footer>
+
+                    <script src="/static/js/app.js"></script>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', async () => {
+                            const userStr = localStorage.getItem('user');
+                            if (!userStr) {
+                                window.location.href = '/login/';
+                                return;
+                            }
+                            const user = JSON.parse(userStr);
+                            document.getElementById('profile-name').textContent = user.name;
+                            document.getElementById('profile-email').textContent = user.email;
+                            document.getElementById('membership-id').textContent = user.membership_id || 'MEM-PENDING';
+
+                            // Fetch Bookings for Stats
+                            try {
+                                const response = await fetch(`/api/flights/bookings/?email=${encodeURIComponent(user.email)}`);
+                                if (response.ok) {
+                                    const bookings = await response.json();
+
+                                    // Update Total Flights
+                                    document.querySelector('.stat-card:nth-child(1) div:last-child').textContent = bookings.length;
+
+                                    // Calculate Miles (e.g., 500 miles per booking)
+                                    const miles = bookings.length * 500;
+                                    document.querySelector('.stat-card:nth-child(2) div:last-child').textContent = miles.toLocaleString();
+
+                                    // Find Next Trip
+                                    const now = new Date();
+                                    const upcomingTrips = bookings
+                                        .map(b => ({ ...b, date: new Date(b.booking_date) }))
+                                        .filter(b => b.date > now)
+                                        .sort((a, b) => a.date - b.date);
+
+                                    const nextTripEl = document.querySelector('.stat-card:nth-child(3) div:last-child');
+                                    if (upcomingTrips.length > 0) {
+                                        const next = upcomingTrips[0];
+                                        nextTripEl.innerHTML = `
+                            <div style="font-size: 0.9rem; color: var(--primary-color);">${next.flight_number}</div>
+                            <div style="font-size: 0.8rem;">${next.date.toLocaleDateString()}</div>
+                        `;
+                                    } else {
+                                        nextTripEl.textContent = 'No upcoming trips';
+                                        nextTripEl.style.fontSize = '1rem';
+                                    }
+                                }
+                            } catch (err) {
+                                console.error("Failed to fetch stats:", err);
+                            }
+
+                            document.getElementById('logout-btn').addEventListener('click', (e) => {
+                                e.preventDefault();
+                                if (confirm('Are you sure you want to logout?')) {
+                                    localStorage.removeItem('user');
+                                    window.location.href = '/';
+                                }
+                            });
+                        });
+                    </script>
+                </body>
+
+</html>
