@@ -1,0 +1,148 @@
+<title>Check-in | SkyHigh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-plane-departure"></i> SkyHigh
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="/">Book Flight</a>
+            <a href="/my-trips/">My Trips</a>
+            <a href="/check-in/" class="active">Check-in</a>
+            <a href="/profile/" class="profile-link hidden">Profile</a>
+            <a href="/login/" class="login-btn btn btn-primary" style="padding: 0.5rem 1.2rem;">Login</a>
+        </div>
+    </nav>
+
+    <main class="container" style="justify-content: center; min-height: 80vh; align-items: center; display: flex;">
+        <div class="glass-panel" style="max-width: 500px; width: 100%; padding: 3rem 2.5rem;">
+            <div style="text-align: center; margin-bottom: 2.5rem;">
+                <div
+                    style="width: 70px; height: 70px; background: rgba(16, 185, 129, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--success-color); font-size: 1.75rem;">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">Online Check-in</h2>
+                <p style="color: var(--text-muted);">Enter your booking details to check in</p>
+            </div>
+
+            <form style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div class="form-group">
+                    <label for="pnr">Booking Reference (PNR)</label>
+                    <input type="text" id="pnr" placeholder="e.g. ABC123" required maxlength="6"
+                        style="text-transform: uppercase; font-family: monospace; letter-spacing: 2px; font-weight: 600;">
+                </div>
+                <div class="form-group">
+                    <label for="lastname">Last Name</label>
+                    <input type="text" id="lastname" placeholder="Passenger's last name" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1rem;">
+                    Find Booking <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+                </button>
+            </form>
+
+            <div style="margin-top: 2rem; text-align: center; font-size: 0.9rem; color: var(--text-muted);">
+                Check-in opens 24 hours before departure.
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container" style="text-align: center;">
+            <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem;">
+                <a href="#" style="color: var(--text-muted);">About Us</a>
+                <a href="#" style="color: var(--text-muted);">Contact</a>
+                <a href="#" style="color: var(--text-muted);">Privacy Policy</a>
+                <a href="#" style="color: var(--text-muted);">Terms of Service</a>
+            </div>
+            <div style="color: var(--text-light); font-size: 0.9rem;">
+                &copy; 2025 SkyHigh Airlines. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form');
+            const pnrInput = document.getElementById('pnr');
+            const lastnameInput = document.getElementById('lastname');
+            const btn = form.querySelector('button');
+            const mainContainer = document.querySelector('.glass-panel');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const pnr = pnrInput.value.trim();
+                const lastname = lastnameInput.value.trim();
+
+                if (!pnr || !lastname) return;
+
+                // UI Loading State
+                const originalBtnContent = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<div class="spinner"></div> Processing...';
+
+                try {
+                    const response = await fetch('/api/flights/bookings/check-in/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ pnr, lastname })
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        // Show Check-in Success / Details
+                        mainContainer.innerHTML = `
+                            <div style="text-align: center;">
+                                <div style="width: 80px; height: 80px; background: rgba(52, 211, 153, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                                    <i class="fas fa-check-circle" style="font-size: 2.5rem; color: #34d399;"></i>
+                                </div>
+                                <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Check-in Successful!</h2>
+                                <p style="color: var(--text-muted); margin-bottom: 2rem;">You are checked in for your flight.</p>
+                                
+                                <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; text-align: left; margin-bottom: 2rem;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                                        <span style="color: var(--text-muted);">Flight</span>
+                                        <span style="font-weight: 600;">${result.booking.flight_number}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                                        <span style="color: var(--text-muted);">Date</span>
+                                        <span style="font-weight: 600;">${new Date(result.booking.booking_date).toLocaleDateString()}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: var(--text-muted);">Passengers</span>
+                                        <span style="font-weight: 600;">${result.booking.passenger_details.length}</span>
+                                    </div>
+                                </div>
+
+                                <button onclick="window.location.reload()" class="btn btn-primary" style="width: 100%;">Check in another booking</button>
+                            </div>
+                        `;
+                    } else {
+                        alert(result.error || 'Check-in failed. Please check your details.');
+                        btn.disabled = false;
+                        btn.innerHTML = originalBtnContent;
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('An error occurred. Please try again.');
+                    btn.disabled = false;
+                    btn.innerHTML = originalBtnContent;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
