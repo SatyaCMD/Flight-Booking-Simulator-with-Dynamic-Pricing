@@ -1,8 +1,6 @@
 import os
 import django
 from django.conf import settings
-
-# Configure Django settings manually for the test script
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'flight_simulator.settings')
 django.setup()
 
@@ -23,7 +21,6 @@ def test_api():
     assert len(response.data) > 0
 
     print("\nTesting Flight Search API...")
-    # Get a valid flight to search for
     repo = FlightRepository()
     flight = repo.find_all()[0]
     
@@ -41,3 +38,4 @@ def test_api():
 
 if __name__ == "__main__":
     test_api()
+
