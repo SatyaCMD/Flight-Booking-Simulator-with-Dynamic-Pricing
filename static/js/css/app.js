@@ -7,13 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const airportsList = document.getElementById('airports-list');
 
     if (searchForm) {
-        // Fetch airports for autocomplete
         fetchAirports();
 
         searchForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // UI Loading State
             searchBtn.disabled = true;
             btnText.textContent = 'Searching...';
             spinner.classList.remove('hidden');
@@ -24,8 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const origin = formData.get('origin').toUpperCase();
             const destination = formData.get('destination').toUpperCase();
             const dateRaw = formData.get('date');
-
-            // Ensure date is YYYY-MM-DD
             const dateObj = new Date(dateRaw);
             const year = dateObj.getFullYear();
             const month = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -40,8 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const response = await fetch(searchUrl);
                 const flights = await response.json();
-
-                // Artificial delay for effect
                 await new Promise(r => setTimeout(r, 600));
 
                 if (flights.length === 0) {
@@ -68,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
             } finally {
-                // Reset UI State
                 searchBtn.disabled = false;
                 btnText.textContent = 'Search Flights';
                 spinner.classList.add('hidden');
@@ -146,11 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${hours}h ${minutes}m`;
     }
 
-    // Check Auth Status on Load
     checkAuthStatus();
 });
 
-// Global function to check auth status
 function checkAuthStatus() {
     console.log("Checking Auth Status...");
     const userStr = localStorage.getItem('user');
@@ -166,9 +157,6 @@ function checkAuthStatus() {
                 loginBtn.textContent = 'Logout';
                 loginBtn.href = '#';
                 loginBtn.classList.add('logout-btn');
-
-                // Use a cleaner approach to handle the event listener
-                // Clone to remove old listeners
                 const newLoginBtn = loginBtn.cloneNode(true);
                 loginBtn.parentNode.replaceChild(newLoginBtn, loginBtn);
 
@@ -185,7 +173,6 @@ function checkAuthStatus() {
             if (profileLink) {
                 profileLink.classList.remove('hidden');
 
-                // Add Membership ID display
                 let memIdDisplay = document.getElementById('nav-membership-id');
                 if (!memIdDisplay) {
                     memIdDisplay = document.createElement('span');
@@ -198,7 +185,6 @@ function checkAuthStatus() {
                     memIdDisplay.style.alignItems = 'center';
                     memIdDisplay.innerHTML = `<i class="fas fa-crown" style="margin-right: 0.5rem;"></i> ${user.membership_id || 'Member'}`;
 
-                    // Insert before login button
                     const navLinks = document.querySelector('.nav-links');
                     if (navLinks) {
                         navLinks.insertBefore(memIdDisplay, document.querySelector('.login-btn'));
@@ -207,7 +193,7 @@ function checkAuthStatus() {
             }
         } catch (e) {
             console.error("Error parsing user data:", e);
-            localStorage.removeItem('user'); // Clear invalid data
+            localStorage.removeItem('user'); 
         }
     } else {
         console.log("No user logged in.");
@@ -215,7 +201,6 @@ function checkAuthStatus() {
             profileLink.classList.add('hidden');
         }
 
-        // Remove membership ID if exists
         const memIdDisplay = document.getElementById('nav-membership-id');
         if (memIdDisplay) {
             memIdDisplay.remove();
@@ -226,9 +211,9 @@ function checkAuthStatus() {
             loginBtn.href = '/login/';
             loginBtn.classList.remove('logout-btn');
 
-            // Reset listener to default (navigate to href)
             const newLoginBtn = loginBtn.cloneNode(true);
             loginBtn.parentNode.replaceChild(newLoginBtn, loginBtn);
         }
     }
 }
+
