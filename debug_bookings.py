@@ -3,12 +3,10 @@ import sys
 import django
 from pprint import pprint
 
-# Setup Django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'flight_simulator.settings')
 django.setup()
 
 from flights.repositories import BookingRepository
-
 repo = BookingRepository()
 bookings = repo.collection.find({})
 
@@ -24,3 +22,4 @@ for b in bookings:
         print(f"  MISSING FIELDS: {missing}")
     else:
         print("  Valid.")
+
