@@ -33,8 +33,6 @@ class Flight:
     total_seats: int
     available_seats: int
     status: str = "SCHEDULED"  # SCHEDULED, DELAYED, CANCELLED
-    
-    # Dynamic pricing fields (for later milestones, but good to have structure)
     current_price: Optional[float] = None
 
     def __post_init__(self):
@@ -56,3 +54,4 @@ class Booking:
     
     def to_dict(self):
         return asdict(self)
+
