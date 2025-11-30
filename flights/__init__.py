@@ -1,0 +1,3 @@
+"""
+Flights App Configuration
+"""
