@@ -34,14 +34,14 @@ class Command(BaseCommand):
                         minute = random.randint(0, 59)
                         departure = current_date.replace(hour=hour, minute=minute)
                         route_hash = hash(origin + destination)
-                        base_duration_hours = (route_hash % 12) + 2 # 2 to 14 hours
-                        duration_variance = random.randint(-30, 30) # +/- 30 mins
+                        base_duration_hours = (route_hash % 12) + 2 
+                        duration_variance = random.randint(-30, 30) 
                         
                         duration_minutes = (base_duration_hours * 60) + duration_variance
                         arrival = departure + timedelta(minutes=duration_minutes)
                         
                         airline = random.choice(airlines)
-                        base_cost = 100 + (base_duration_hours * 50) # Rough formula
+                        base_cost = 100 + (base_duration_hours * 50) 
                         price_variance = random.randint(-50, 200)
                         price = base_cost + price_variance
                         
