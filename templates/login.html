@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +31,6 @@
     <main class="container" style="justify-content: center; min-height: 80vh; align-items: center; display: flex;">
         <div class="glass-panel" style="max-width: 450px; width: 100%; padding: 2.5rem;">
 
-            <!-- Login Form -->
             <div id="login-container">
                 <h2 style="text-align: center; margin-bottom: 0.5rem; font-size: 2rem;">Welcome Back</h2>
                 <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Enter your details to
@@ -62,7 +60,6 @@
                 </p>
             </div>
 
-            <!-- OTP Form -->
             <div id="otp-container" class="hidden">
                 <div style="text-align: center; margin-bottom: 2rem;">
                     <div
@@ -75,7 +72,6 @@
                     </p>
                 </div>
 
-                <!-- Debug OTP Display -->
                 <div
                     style="background: rgba(234, 179, 8, 0.1); color: #fbbf24; padding: 0.75rem; border-radius: 8px; text-align: center; margin-bottom: 2rem; border: 1px dashed rgba(234, 179, 8, 0.3); font-size: 0.9rem;">
                     <i class="fas fa-bug" style="margin-right: 0.5rem;"></i> DEBUG: OTP is <strong id="debug-otp-value"
@@ -98,7 +94,6 @@
                 </form>
             </div>
 
-            <!-- Signup Form -->
             <div id="signup-container" class="hidden">
                 <h2 style="text-align: center; margin-bottom: 0.5rem; font-size: 2rem;">Create Account</h2>
                 <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Join SkyHigh for premium
@@ -168,7 +163,6 @@
                             style="justify-content: center; min-height: 80vh; align-items: center; display: flex;">
                             <div class="glass-panel" style="max-width: 450px; width: 100%; padding: 2.5rem;">
 
-                                <!-- Login Form -->
                                 <div id="login-container">
                                     <h2 style="text-align: center; margin-bottom: 0.5rem; font-size: 2rem;">Welcome Back
                                     </h2>
@@ -203,7 +197,6 @@
                                     </p>
                                 </div>
 
-                                <!-- OTP Form -->
                                 <div id="otp-container" class="hidden">
                                     <div style="text-align: center; margin-bottom: 2rem;">
                                         <div
@@ -216,7 +209,6 @@
                                         </p>
                                     </div>
 
-                                    <!-- Debug OTP Display -->
                                     <div
                                         style="background: rgba(234, 179, 8, 0.1); color: #fbbf24; padding: 0.75rem; border-radius: 8px; text-align: center; margin-bottom: 2rem; border: 1px dashed rgba(234, 179, 8, 0.3); font-size: 0.9rem;">
                                         <i class="fas fa-bug" style="margin-right: 0.5rem;"></i> DEBUG: OTP is <strong
@@ -242,7 +234,6 @@
                                     </form>
                                 </div>
 
-                                <!-- Signup Form -->
                                 <div id="signup-container" class="hidden">
                                     <h2 style="text-align: center; margin-bottom: 0.5rem; font-size: 2rem;">Create
                                         Account</h2>
@@ -281,11 +272,9 @@
                                             style="color: var(--primary-color); font-weight: 600;">Sign in</a>
                                     </p>
                                 </div>
-
                             </div>
                         </main>
 
-                        <!-- Footer -->
                         <footer>
                             <div class="container" style="text-align: center;">
                                 <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem;">
@@ -309,7 +298,6 @@
                                 const showSignupBtn = document.getElementById('show-signup');
                                 const showLoginBtn = document.getElementById('show-login');
 
-                                // Toggle Forms
                                 showSignupBtn.addEventListener('click', (e) => {
                                     e.preventDefault();
                                     loginContainer.classList.add('hidden');
@@ -324,7 +312,6 @@
                                     otpContainer.classList.add('hidden');
                                 });
 
-                                // Handle Login
                                 const loginForm = document.getElementById('login-form');
                                 loginForm.addEventListener('submit', async (e) => {
                                     e.preventDefault();
@@ -349,13 +336,11 @@
 
                                         if (response.ok) {
                                             if (result.status === 'OTP_REQUIRED') {
-                                                // Switch to OTP Form
                                                 loginContainer.classList.add('hidden');
                                                 otpContainer.classList.remove('hidden');
                                                 document.getElementById('otp-email').value = result.email;
                                                 document.getElementById('debug-otp-value').textContent = result.debug_otp;
                                             } else {
-                                                // Direct login (fallback)
                                                 localStorage.setItem('user', JSON.stringify(result.user));
                                                 window.location.href = '/';
                                             }
@@ -371,8 +356,6 @@
                                         spinner.classList.add('hidden');
                                     }
                                 });
-
-                                // Handle OTP Verification
                                 const otpForm = document.getElementById('otp-form');
                                 otpForm.addEventListener('submit', async (e) => {
                                     e.preventDefault();
@@ -396,7 +379,6 @@
                                         const result = await response.json();
 
                                         if (response.ok) {
-                                            // Success - Redirect to home
                                             localStorage.setItem('user', JSON.stringify(result.user));
                                             window.location.href = '/';
                                         } else {
@@ -411,8 +393,6 @@
                                         spinner.classList.add('hidden');
                                     }
                                 });
-
-                                // Handle Signup
                                 const signupForm = document.getElementById('signup-form');
                                 signupForm.addEventListener('submit', async (e) => {
                                     e.preventDefault();
@@ -436,7 +416,6 @@
                                         const result = await response.json();
 
                                         if (response.ok) {
-                                            // Success - Switch to login or auto-login
                                             alert('Account created! Please login.');
                                             signupContainer.classList.add('hidden');
                                             loginContainer.classList.remove('hidden');
@@ -455,5 +434,4 @@
                             });
                         </script>
                     </body>
-
                     </html>
