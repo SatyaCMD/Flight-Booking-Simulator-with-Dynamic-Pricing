@@ -20,13 +20,12 @@ class SignupView(APIView):
 
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         
-        # Generate Membership ID
         import random
         membership_id = f"MEM{random.randint(10000, 99999)}"
 
         user = {
             'email': email,
-            'password': hashed_password, # Store bytes or decode to string? PyMongo handles bytes.
+            'password': hashed_password, 
             'name': name,
             'membership_id': membership_id
         }
@@ -49,20 +48,16 @@ class LoginView(APIView):
         if not user:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        # Check password
         if bcrypt.checkpw(password.encode('utf-8'), user['password']):
-            # Generate OTP
             import random
             otp = str(random.randint(100000, 999999))
-            
-            # Store OTP in user document (for simplicity)
             users.update_one({'email': email}, {'$set': {'otp': otp}})
             
             return Response({
                 'message': 'OTP sent',
                 'status': 'OTP_REQUIRED',
                 'email': email,
-                'debug_otp': otp  # For debugging as requested
+                'debug_otp': otp  
             }, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -83,10 +78,7 @@ class VerifyOTPView(APIView):
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
         if user.get('otp') == otp:
-            # Clear OTP after successful login
             update_data = {'$unset': {'otp': ""}}
-            
-            # Ensure Membership ID exists
             membership_id = user.get('membership_id')
             if not membership_id:
                 import random
@@ -105,3 +97,4 @@ class VerifyOTPView(APIView):
             }, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
+
