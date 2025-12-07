@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boarding Pass - {{ booking.booking_reference }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Libre+Barcode+128&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #3b82f6;
+            --bg: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            color: var(--primary);
+        }
+
+        .pass-container {
+            display: flex;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+        }
+
+        .pass-main {
+            flex: 1;
+            padding: 3rem;
+        }
+
+        .pass-stub {
+            width: 320px;
+            background: #f8fafc;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-left: 2px dashed #cbd5e1;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .class-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Route */
+        .route {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .city .code {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .city .name {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .flight-path {
+            flex: 1;
+            margin: 0 3rem;
+            position: relative;
+            height: 2px;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .plane-icon {
+            background: white;
+            padding: 0 1rem;
+            color: var(--accent);
+            font-size: 1.5rem;
+            transform: rotate(90deg);
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .info-item label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .info-item .value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Passengers */
+        .passengers {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }
+
+        .passenger-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .passenger-row:last-child {
+            border-bottom: none;
+        }
+
+        /* Footer */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .barcode {
+            font-family: 'Libre Barcode 128', cursive;
+            font-size: 3rem;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        /* Stub Styles */
+        .stub-header {
+            margin-bottom: 2rem;
+        }
+
+        .stub-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .qr-code {
+            width: 100%;
+            aspect-ratio: 1;
+            background: white;
+            padding: 0.5rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .print-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s;
+            z-index: 100;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .pass-container {
+                box-shadow: none;
+                max-width: 100%;
+                border: 1px solid #e2e8f0;
+            }
+
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="pass-container">
+        <!-- Main Ticket Section -->
+        <div class="pass-main">
+            <div class="header">
+                <div class="logo">
+                    <i class="fas fa-plane-departure"></i> SKYHIGH
+                </div>
+                <div class="class-badge">{{ booking.travel_class|default:"Economy" }}</div>
+            </div>
+
+            <div class="route">
+                <div class="city">
+                    <div class="code">{{ flight.origin|default:"---" }}</div>
+                    <div class="name">Origin</div>
+                </div>
+                <div class="flight-path">
+                    <i class="fas fa-plane plane-icon"></i>
+                </div>
+                <div class="city">
+                    <div class="code">{{ flight.destination|default:"---" }}</div>
+                    <div class="name">Destination</div>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Date</label>
+                    <div class="value">{{ flight.departure_time|date:"d M Y"|default:"N/A" }}</div>
+                </div>
+                <div class="info-item">
+                    <label>Boarding Time</label>
+                    <div class="value">
+                        {% if flight.departure_time %}
+                        {{ flight.departure_time|date:"H:i" }}
+                        {% else %}
+                        --:--
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="info-item">
+                    <label>Flight No</label>
+                    <div class="value">{{ booking.flight_number }}</div>
+                </div>
+                <div class="info-item">
+                    <label>Gate</label>
+                    <div class="value">A12</div>
+                </div>
+                <div class="info-item">
+                    <label>PNR</label>
+                    <div class="value" style="font-size: 1rem;">{{ booking.booking_reference }}</div>
+                </div>
+                <div class="info-item">
+                    <label>TXN ID</label>
+                    <div class="value" style="font-size: 0.8rem;">{{ booking.transaction_id }}</div>
+                </div>
+            </div>
+
+            <div class="passengers" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div class="info-item" style="margin-bottom: 1rem;">
+                        <label>Passenger Name</label>
+                        <div class="value" style="font-size: 1.5rem;">
+                            {% if booking.passenger_details %}
+                            {{ booking.passenger_details.0.name }}
+                            {% else %}
+                            N/A
+                            {% endif %}
+                        </div>
+                        {% if booking.passenger_details|length > 1 %}
+                        <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.2rem;">+ {{
+                            booking.passenger_details|length|add:"-1" }} others</div>
+                        {% endif %}
+                    </div>
+                    <div class="info-item">
+                        <label>Seat</label>
+                        <div class="value" style="color: var(--accent);">
+                            {% if booking.passenger_details %}
+                            {{ booking.passenger_details.0.seat_number }}
+                            {% else %}
+                            ANY
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barcode (Right side of passenger details) -->
+                <div style="text-align: right;">
+                    <div class="barcode" style="font-size: 2.5rem;">{{ booking.booking_reference }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stub Section -->
+        <div class="pass-stub">
+            <div>
+                <div class="stub-header">
+                    <div class="logo" style="font-size: 1.2rem;">
+                        <i class="fas fa-plane-departure"></i> SKYHIGH
+                    </div>
+                </div>
+
+                <div class="stub-info">
+                    <div class="info-item">
+                        <label>Flight</label>
+                        <div class="value" style="font-size: 1rem;">{{ booking.flight_number }}</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Date</label>
+                        <div class="value" style="font-size: 1rem;">{{ flight.departure_time|date:"d M" }}</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Seat</label>
+                        <div class="value" style="font-size: 1rem;">
+                            {% if booking.passenger_details %}
+                            {{ booking.passenger_details.0.seat_number }}
+                            {% else %}
+                            ANY
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <label>Time</label>
+                        <div class="value" style="font-size: 1rem;">{{ flight.departure_time|date:"H:i" }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="qr-code">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ booking.booking_reference }}"
+                    alt="QR Code">
+            </div>
+        </div>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">
+        <i class="fas fa-print"></i> Print Pass
+    </button>
+</body>
+
+</html>
