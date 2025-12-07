@@ -22,7 +22,6 @@ def seed_flights(repo):
     origins = ['JFK', 'LHR', 'LAX', 'SFO', 'DXB', 'SIN', 'HND', 'CDG']
     destinations = ['JFK', 'LHR', 'LAX', 'SFO', 'DXB', 'SIN', 'HND', 'CDG']
     airlines = ['AA', 'BA', 'DL', 'EK', 'SQ', 'JL', 'AF']
-    
     new_flights = []
     start_date = datetime.now()
     for i in range(30):
@@ -45,9 +44,10 @@ def seed_flights(repo):
             )
             new_flights.append(flight)
 
-        for _ in range(5): 
+        for _ in range(5):
             origin = random.choice(origins)
             dest = random.choice([d for d in destinations if d != origin])
+            
             hour = random.randint(6, 22)
             minute = random.choice([0, 15, 30, 45])
             departure = current_date.replace(hour=hour, minute=minute, second=0, microsecond=0)
@@ -73,4 +73,3 @@ def seed_flights(repo):
 
 if __name__ == "__main__":
     debug_flights()
-
