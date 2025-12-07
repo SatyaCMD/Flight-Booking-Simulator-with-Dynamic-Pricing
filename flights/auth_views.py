@@ -25,7 +25,7 @@ class SignupView(APIView):
 
         user = {
             'email': email,
-            'password': hashed_password, 
+            'password': hashed_password,
             'name': name,
             'membership_id': membership_id
         }
@@ -98,3 +98,58 @@ class VerifyOTPView(APIView):
         else:
             return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
 
+class ResendOTPView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        
+        if not email:
+            return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        users = get_users_collection()
+        user = users.find_one({'email': email})
+        
+        if not user:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+            
+        import random
+        otp = str(random.randint(100000, 999999))
+        users.update_one({'email': email}, {'$set': {'otp': otp}})
+        
+        return Response({
+            'message': 'OTP resent successfully',
+            'debug_otp': otp
+        }, status=status.HTTP_200_OK)
+
+class UserUpdateView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        new_name = request.data.get('name')
+        new_password = request.data.get('password')
+        
+        if not email:
+            return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        users = get_users_collection()
+        user = users.find_one({'email': email})
+        
+        if not user:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+            
+        update_fields = {}
+        if new_name:
+            update_fields['name'] = new_name
+        if new_password:
+            update_fields['password'] = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+            
+        if update_fields:
+            users.update_one({'email': email}, {'$set': update_fields})
+        updated_user = users.find_one({'email': email})
+        
+        return Response({
+            'message': 'Profile updated successfully',
+            'user': {
+                'email': updated_user['email'],
+                'name': updated_user['name'],
+                'membership_id': updated_user.get('membership_id')
+            }
+        }, status=status.HTTP_200_OK)
