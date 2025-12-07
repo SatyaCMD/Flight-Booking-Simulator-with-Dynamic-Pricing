@@ -68,6 +68,7 @@
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
         }
+
         @keyframes modalFadeIn {
             from {
                 opacity: 0;
@@ -93,13 +94,48 @@
                 transform: scale(1);
             }
         }
-
         .success-modal-content {
             animation: modalFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .success-icon-circle {
             animation: checkmarkPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+        }
+        .btn-add-passenger {
+            width: 100%;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-add-passenger:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .payment-method-card .glass-panel {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+
+        .payment-method-card input:checked+.glass-panel {
+            border-color: var(--primary-color);
+            background: rgba(255, 215, 0, 0.05);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+            opacity: 1;
+        }
+
+        .summary-card {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -128,31 +164,178 @@
         </div>
         <div class="booking-grid">
             <div class="booking-form-section">
-                <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">Passenger Details</h2>
                 <form id="booking-form">
+                    <div
+                        style="margin-bottom: 2rem; background: rgba(255, 255, 255, 0.03); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <h2 style="margin-bottom: 1rem; font-size: 1.5rem;">Flight Options</h2>
+                        <div class="form-group">
+                            <label>Travel Class</label>
+                            <select id="travel-class" name="travel_class"
+                                style="width: 100%; padding: 1rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white; font-size: 1rem;">
+                                <option value="Economy">Economy (1x Fare)</option>
+                                <option value="Business">Business (1.5x Fare)</option>
+                                <option value="First">First Class (2.5x Fare)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">Passenger Details</h2>
                     <div id="passengers-container">
-                    </div><button type="button" id="add-passenger-btn" class="glass-panel"
-                        style="width: 100%; padding: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; color: var(--primary-color); cursor: pointer; transition: all 0.2s; border: 1px dashed rgba(255, 215, 0, 0.3); background: transparent;"><i
-                            class="fas fa-plus-circle"></i>Add Another Passenger </button>
-                    <h2 style="margin: 3rem 0 1.5rem; font-size: 1.8rem;">Payment Method</h2>
-                    <div class="glass-panel" style="padding: 2rem;">
-                        <div class="form-group" style="margin-bottom: 1.5rem;"><label>Card
-                                Number</label>
-                            <div style="position: relative;"><i class="fas fa-credit-card"
-                                    style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i><input
-                                    type="text" name="card_number" required placeholder="0000 0000 0000 0000"
-                                    style="padding-left: 3rem; font-family: 'Fira Code', monospace;" maxlength="19">
+                    </div>
+
+                    <button type="button" id="add-passenger-btn" class="btn btn-add-passenger">
+                        <i class="fas fa-plus"></i> Add Passenger
+                    </button>
+
+                    <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">Payment</h2>
+                    <div class="glass-panel" style="padding: 1.5rem; margin-bottom: 2rem;">
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Payment
+                                Method</label>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                                <label class="payment-method-card" style="cursor: pointer; position: relative;">
+                                    <input type="radio" name="payment_method" value="card" checked
+                                        style="position: absolute; opacity: 0;">
+                                    <div class="glass-panel"
+                                        style="padding: 1rem; text-align: center; transition: all 0.2s; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <i class="fas fa-credit-card"
+                                            style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--primary-color);"></i>
+                                        <div style="font-size: 0.8rem;">Card</div>
+                                    </div>
+                                </label>
+                                <label class="payment-method-card" style="cursor: pointer; position: relative;">
+                                    <input type="radio" name="payment_method" value="paypal"
+                                        style="position: absolute; opacity: 0;">
+                                    <div class="glass-panel"
+                                        style="padding: 1rem; text-align: center; transition: all 0.2s; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <i class="fab fa-paypal"
+                                            style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #3b82f6;"></i>
+                                        <div style="font-size: 0.8rem;">PayPal</div>
+                                    </div>
+                                </label>
+                                <label class="payment-method-card" style="cursor: pointer; position: relative;">
+                                    <input type="radio" name="payment_method" value="amazon"
+                                        style="position: absolute; opacity: 0;">
+                                    <div class="glass-panel"
+                                        style="padding: 1rem; text-align: center; transition: all 0.2s; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <i class="fab fa-amazon"
+                                            style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #ff9900;"></i>
+                                        <div style="font-size: 0.8rem;">Amazon</div>
+                                    </div>
+                                </label>
+                                <label class="payment-method-card" style="cursor: pointer; position: relative;">
+                                    <input type="radio" name="payment_method" value="upi"
+                                        style="position: absolute; opacity: 0;">
+                                    <div class="glass-panel"
+                                        style="padding: 1rem; text-align: center; transition: all 0.2s; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <i class="fas fa-mobile-alt"
+                                            style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #10b981;"></i>
+                                        <div style="font-size: 0.8rem;">UPI</div>
+                                    </div>
+                                </label>
+                                <label class="payment-method-card" style="cursor: pointer; position: relative;">
+                                    <input type="radio" name="payment_method" value="stripe"
+                                        style="position: absolute; opacity: 0;">
+                                    <div class="glass-panel"
+                                        style="padding: 1rem; text-align: center; transition: all 0.2s; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <i class="fab fa-stripe-s"
+                                            style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #635bff;"></i>
+                                        <div style="font-size: 0.8rem;">Stripe</div>
+                                    </div>
+                                </label>
+                                <label class="payment-method-card" style="cursor: pointer; position: relative;">
+                                    <input type="radio" name="payment_method" value="netbanking"
+                                        style="position: absolute; opacity: 0;">
+                                    <div class="glass-panel"
+                                        style="padding: 1rem; text-align: center; transition: all 0.2s; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <i class="fas fa-university"
+                                            style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-muted);"></i>
+                                        <div style="font-size: 0.8rem;">Net Bank</div>
+                                    </div>
+                                </label>
                             </div>
                         </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                            <div class="form-group"><label>Expiry Date</label><input type="text" name="expiry" required
-                                    placeholder="MM/YY" maxlength="5" style="text-align: center;"></div>
-                            <div class="form-group"><label>CVV</label><input type="password" name="cvv" required
-                                    placeholder="123" maxlength="3" style="text-align: center;"></div>
+
+                        <div id="payment-details-container" style="margin-top: 2rem;">
+                            <div id="card-details" class="payment-section">
+                                <div class="form-group">
+                                    <label>Card Number</label>
+                                    <div style="position: relative;">
+                                        <input type="text" id="card-input" placeholder="0000 0000 0000 0000"
+                                            maxlength="19" required>
+                                        <i id="card-icon" class="fas fa-credit-card"
+                                            style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div class="form-group">
+                                        <label>Expiry Date</label>
+                                        <input type="text" placeholder="MM/YY" maxlength="5" style="text-align: center;"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>CVV</label>
+                                        <input type="password" placeholder="123" maxlength="3"
+                                            style="text-align: center;" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="upi-details" class="payment-section hidden">
+                                <div class="form-group">
+                                    <label>UPI ID</label>
+                                    <input type="text" placeholder="username@bank" style="width: 100%;">
+                                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+                                        Verify your UPI ID on your mobile app.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="paypal-details" class="payment-section hidden">
+                                <div
+                                    style="text-align: center; padding: 2rem; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border: 1px dashed #3b82f6;">
+                                    <i class="fab fa-paypal"
+                                        style="font-size: 3rem; color: #3b82f6; margin-bottom: 1rem;"></i>
+                                    <p>You will be redirected to PayPal to complete your purchase securely.</p>
+                                </div>
+                            </div>
+
+                            <div id="amazon-details" class="payment-section hidden">
+                                <div
+                                    style="text-align: center; padding: 2rem; background: rgba(255, 153, 0, 0.1); border-radius: 8px; border: 1px dashed #ff9900;">
+                                    <i class="fab fa-amazon"
+                                        style="font-size: 3rem; color: #ff9900; margin-bottom: 1rem;"></i>
+                                    <p>Login with your Amazon account to pay.</p>
+                                </div>
+                            </div>
+
+                            <div id="stripe-details" class="payment-section hidden">
+                                <div
+                                    style="text-align: center; padding: 2rem; background: rgba(99, 91, 255, 0.1); border-radius: 8px; border: 1px dashed #635bff;">
+                                    <i class="fab fa-stripe-s"
+                                        style="font-size: 3rem; color: #635bff; margin-bottom: 1rem;"></i>
+                                    <p>Secure credit card payment via Stripe.</p>
+                                </div>
+                            </div>
+
+                            <div id="netbanking-details" class="payment-section hidden">
+                                <div class="form-group">
+                                    <label>Select Bank</label>
+                                    <select
+                                        style="width: 100%; padding: 1rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white;">
+                                        <option>HDFC Bank</option>
+                                        <option>ICICI Bank</option>
+                                        <option>SBI</option>
+                                        <option>Axis Bank</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                    </div><button type="submit" class="btn btn-primary"
-                        style="width: 100%; margin-top: 2rem; font-size: 1.1rem; padding: 1.2rem;"><span
-                            class="btn-text">Confirm & Pay</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; font-size: 1.1rem; padding: 1.2rem;">
+                        <span class="btn-text">Confirm & Pay</span>
                         <div class="spinner hidden"></div>
                     </button>
                 </form>
@@ -166,11 +349,22 @@
                 </div>
                 <div id="flight-details" class="hidden">
                     <div style="margin-bottom: 2rem;">
-                        <div
-                            style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">
-                            Route</div>
-                        <div style="font-size: 1.4rem; font-weight: 700; color: var(--primary-color);"
-                            id="summary-route"></div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <div
+                                    style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">
+                                    Route</div>
+                                <div style="font-size: 1.4rem; font-weight: 700; color: var(--primary-color);"
+                                    id="summary-route"></div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div
+                                    style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.25rem;">
+                                    Availability</div>
+                                <div style="font-size: 1rem; font-weight: 600; color: #34d399;" id="seats-available">--
+                                    Seats</div>
+                            </div>
+                        </div>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
                         <div>
@@ -311,11 +505,11 @@
                 }
 
                 flightDetails = await response.json();
-
                 document.getElementById('flight-loading').classList.add('hidden');
                 document.getElementById('flight-details').classList.remove('hidden');
 
                 document.getElementById('summary-route').textContent = `${flightDetails.origin} → ${flightDetails.destination}`;
+                document.getElementById('seats-available').textContent = `${flightDetails.available_seats} Seats`;
 
                 const date = new Date(flightDetails.departure_time);
 
@@ -342,13 +536,15 @@
                 updatePrice();
             });
 
+            const travelClassSelect = document.getElementById('travel-class');
+            travelClassSelect.addEventListener('change', updatePrice);
+
             function addPassengerForm() {
                 const count = passengersContainer.children.length + 1;
                 const div = document.createElement('div');
                 div.className = 'passenger-form glass-panel';
                 div.style.marginBottom = '1.5rem';
                 div.style.padding = '1.5rem';
-
                 div.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
 <h4 style="color: var(--text-main); font-size: 1rem; font-weight: 600;">
     <i class="fas fa-user" style="color: var(--primary-color); margin-right: 0.5rem;"></i> Passenger ${count}
@@ -381,6 +577,7 @@ ${count > 1 ? `<button type="button" class="remove-btn" style="background: none;
     </select>
 </div>
 </div>`;
+
                 passengersContainer.appendChild(div);
 
                 if (count > 1) {
@@ -446,7 +643,28 @@ ${count > 1 ? `<button type="button" class="remove-btn" style="background: none;
             function updatePrice() {
                 console.log("Updating price. Base:", basePrice);
                 const count = passengersContainer.children.length;
-                let subtotal = basePrice * count;
+                let multiplier = 1;
+                let seatsDisplay = flightDetails.available_seats;
+
+                const travelClass = document.getElementById('travel-class').value;
+
+                if (travelClass === 'Business') {
+                    multiplier = 1.5;
+                    seatsDisplay = Math.floor(flightDetails.available_seats * 0.25); // Simulate fewer business seats
+                }
+                if (travelClass === 'First') {
+                    multiplier = 2.5;
+                    seatsDisplay = Math.floor(flightDetails.available_seats * 0.10); // Simulate fewer first class seats
+                }
+
+                const seatsEl = document.getElementById('seats-available');
+                if (seatsEl) {
+                    seatsEl.textContent = `${seatsDisplay} Seats`;
+                    if (seatsDisplay < 5) seatsEl.style.color = '#ef4444';
+                    else seatsEl.style.color = '#34d399';
+                }
+
+                let subtotal = basePrice * multiplier * count;
                 let discountAmount = 0;
 
                 if (discountApplied) {
@@ -457,7 +675,7 @@ ${count > 1 ? `<button type="button" class="remove-btn" style="background: none;
                 const tax = subtotal * taxRate;
                 const total = subtotal + tax;
 
-                document.getElementById('price-breakdown-base').textContent = `$${(basePrice * count).toFixed(2)}`;
+                document.getElementById('price-breakdown-base').textContent = `$${(basePrice * multiplier * count).toFixed(2)}`;
                 document.getElementById('price-breakdown-tax').textContent = `$${tax.toFixed(2)}`;
                 document.getElementById('summary-total').textContent = `$${total.toFixed(2)}`;
 
@@ -468,7 +686,6 @@ ${count > 1 ? `<button type="button" class="remove-btn" style="background: none;
             }
 
             const form = document.getElementById('booking-form');
-
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const btn = form.querySelector('button[type="submit"]');
@@ -508,7 +725,9 @@ ${count > 1 ? `<button type="button" class="remove-btn" style="background: none;
                         body: JSON.stringify({
                             user_email: user.email,
                             flight_number: flightDetails.flight_number,
-                            passenger_details: passengers
+                            flight_id: flightId,
+                            passenger_details: passengers,
+                            travel_class: document.getElementById('travel-class').value
                         })
                     });
 
@@ -518,9 +737,7 @@ ${count > 1 ? `<button type="button" class="remove-btn" style="background: none;
                         const modal = document.getElementById('success-modal');
                         document.getElementById('modal-pnr').textContent = result.booking.booking_reference;
                         document.getElementById('modal-txn').textContent = result.booking.transaction_id;
-
                         modal.classList.remove('hidden');
-
                         document.getElementById('modal-close-btn').addEventListener('click', () => {
                             window.location.href = '/my-trips/';
                         });
@@ -538,9 +755,52 @@ ${count > 1 ? `<button type="button" class="remove-btn" style="background: none;
                     spinner.classList.add('hidden');
                 }
             });
+            const cardInput = document.getElementById('card-input');
+            const cardIcon = document.getElementById('card-icon');
+
+            if (cardInput) {
+                cardInput.addEventListener('input', (e) => {
+                    let value = e.target.value.replace(/\D/g, '');
+                    let formattedValue = '';
+                    for (let i = 0; i < value.length; i++) {
+                        if (i > 0 && i % 4 === 0) formattedValue += ' ';
+                        formattedValue += value[i];
+                    }
+                    e.target.value = formattedValue;
+                    cardIcon.className = 'fas fa-credit-card'; // Default
+                    cardIcon.style.color = 'var(--text-muted)';
+
+                    if (value.startsWith('4')) {
+                        cardIcon.className = 'fab fa-cc-visa';
+                        cardIcon.style.color = '#ffffff';
+                    } else if (value.startsWith('5')) {
+                        cardIcon.className = 'fab fa-cc-mastercard';
+                        cardIcon.style.color = '#ff5f00';
+                    } else if (value.startsWith('3')) {
+                        cardIcon.className = 'fab fa-cc-amex';
+                        cardIcon.style.color = '#006fcf';
+                    } else if (value.startsWith('6')) {
+                        cardIcon.className = 'fab fa-cc-discover';
+                        cardIcon.style.color = '#e55c20';
+                    }
+                });
+            }
+            const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
+            const paymentSections = document.querySelectorAll('.payment-section');
+
+            paymentRadios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    const method = e.target.value;
+
+                    paymentSections.forEach(section => section.classList.add('hidden'));
+                    const selectedSection = document.getElementById(`${method}-details`);
+                    if (selectedSection) {
+                        selectedSection.classList.remove('hidden');
+                    }
+                });
+            });
         });
     </script>
 </body>
-
 
 </html>
