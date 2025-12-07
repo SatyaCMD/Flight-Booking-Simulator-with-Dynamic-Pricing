@@ -61,6 +61,11 @@
         .flatpickr-weekday {
             color: var(--text-muted) !important;
         }
+
+        option {
+            background-color: #0a192f;
+            color: white;
+        }
     </style>
 </head>
 
@@ -120,6 +125,22 @@
                             style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label><i class="fas fa-sort"></i> Sort By</label>
+                    <div style="position: relative;">
+                        <select name="sort_by"
+                            style="padding-left: 2.5rem; background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.5rem; width: 100%; height: 45px; appearance: none;">
+                            <option value="price_asc">Price: Low to High</option>
+                            <option value="price_desc">Price: High to Low</option>
+                            <option value="duration_asc">Duration: Shortest First</option>
+                            <option value="duration_desc">Duration: Longest First</option>
+                        </select>
+                        <i class="fas fa-filter"
+                            style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                        <i class="fas fa-chevron-down"
+                            style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none;"></i>
+                    </div>
+                </div>
                 <button type="submit" class="search-btn">
                     <span class="btn-text">Search Flights</span>
                     <div class="spinner hidden"></div>
@@ -145,6 +166,7 @@
             </div>
         </div>
     </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="/static/js/app.js"></script>
     <script>
@@ -159,4 +181,5 @@
         });
     </script>
 </body>
+
 </html>
