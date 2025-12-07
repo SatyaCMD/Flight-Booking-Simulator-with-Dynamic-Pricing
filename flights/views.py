@@ -15,6 +15,7 @@ class FlightSearchView(APIView):
         origin = request.query_params.get('origin')
         destination = request.query_params.get('destination')
         date = request.query_params.get('date')
+        sort_by = request.query_params.get('sort_by')
 
         if not origin or not destination:
             return Response(
@@ -23,7 +24,7 @@ class FlightSearchView(APIView):
             )
 
         repo = FlightRepository()
-        flights = repo.search(origin, destination, date)
+        flights = repo.search(origin, destination, date, sort_by)
         return Response([f.to_dict() for f in flights])
 
 class AirportListView(APIView):
