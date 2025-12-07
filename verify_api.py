@@ -1,6 +1,7 @@
 import os
 import django
 from django.conf import settings
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'flight_simulator.settings')
 django.setup()
 
@@ -38,4 +39,3 @@ def test_api():
 
 if __name__ == "__main__":
     test_api()
-
