@@ -17,7 +17,6 @@ class MongoDB:
     def get_db(cls):
         if cls._db is None:
             client = cls.get_client()
-            # Parse db name from URI or use default
             db_name = client.get_default_database().name
             cls._db = client[db_name]
         return cls._db
