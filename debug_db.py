@@ -29,10 +29,10 @@ def debug_flights():
         print(f"  Dep: {results[0].departure_time}")
     else:
         print("No flights found for IST -> JFK!")
+
     print("\nTesting Search (JFK -> LHR for tomorrow)...")
     results = repo.search(origin="JFK", destination="LHR", date=tomorrow)
     print(f"Found {len(results)} flights from JFK to LHR on {tomorrow}")
 
 if __name__ == "__main__":
     debug_flights()
-
