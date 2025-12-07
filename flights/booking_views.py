@@ -5,8 +5,6 @@ from .repositories import BookingRepository, FlightRepository
 from .models import Booking
 from datetime import datetime
 import uuid
-import random
-import string
 
 class BookingCreateView(APIView):
     def post(self, request):
@@ -23,6 +21,8 @@ class BookingCreateView(APIView):
         if not passenger_details or not isinstance(passenger_details, list) or len(passenger_details) == 0:
             return Response({'error': 'At least one passenger is required'}, status=status.HTTP_400_BAD_REQUEST)
 
+        import random
+        import string
         transaction_id = "TXN" + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
 
         for passenger in passenger_details:
@@ -197,3 +197,4 @@ class UserStatsView(APIView):
             'miles_earned': miles_earned,
             'next_trip': next_trip
         })
+
