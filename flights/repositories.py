@@ -15,7 +15,7 @@ class FlightRepository:
         cursor = self.collection.find({}, {'_id': 0})
         return [Flight(**doc) for doc in cursor]
 
-    def search(self, origin: str = None, destination: str = None, date: str = None) -> List[Flight]:
+    def search(self, origin: str = None, destination: str = None, date: str = None, sort_by: str = None) -> List[Flight]:
         query = {}
         if origin:
             query['origin'] = origin.upper()
@@ -31,13 +31,51 @@ class FlightRepository:
                     '$lte': end_date
                 }
             except ValueError:
-                pass 
-
+                pass # Ignore invalid date format for now
         print(f"DEBUG: Search Query: {query}")
-        cursor = self.collection.find(query, {'_id': 0})
+        
+        sort_criteria = []
+        if sort_by == 'price_asc':
+            sort_criteria.append(('current_price', 1))
+        elif sort_by == 'price_desc':
+            sort_criteria.append(('current_price', -1))
+        elif sort_by == 'duration_asc':
+            pass 
+        elif sort_by == 'duration_desc':
+            pass
+        else:
+            sort_criteria.append(('current_price', 1))
+
+        if sort_criteria:
+            cursor = self.collection.find(query, {'_id': 0}).sort(sort_criteria)
+        else:
+            cursor = self.collection.find(query, {'_id': 0})
         results = [Flight(**doc) for doc in cursor]
+        
+        if sort_by == 'duration_asc':
+            results.sort(key=lambda x: (x.arrival_time - x.departure_time).total_seconds())
+        elif sort_by == 'duration_desc':
+            results.sort(key=lambda x: (x.arrival_time - x.departure_time).total_seconds(), reverse=True)
+            
         print(f"DEBUG: Found {len(results)} flights")
         return results
+
+    def update_flight(self, flight: Flight):
+        self.collection.update_one(
+            {'flight_id': flight.flight_id},
+            {'$set': flight.to_dict()}
+        )
+
+    def decrement_seats(self, flight_id: str, count: int):
+        self.collection.update_one(
+            {'flight_id': flight_id},
+            {'$inc': {'available_seats': -count}}
+        )
+
+    def save_fare_history(self, history):
+        from core.db import MongoDB
+        db = MongoDB.get_db()
+        db['fare_history'].insert_one(history.to_dict())
 
     def get_flight_by_id(self, flight_id: str) -> Optional[Flight]:
         doc = self.collection.find_one({'flight_id': flight_id}, {'_id': 0})
@@ -65,4 +103,3 @@ class BookingRepository:
     def get_by_user(self, email: str) -> List[Booking]:
         cursor = self.collection.find({'user_email': email}, {'_id': 0})
         return [Booking(**doc) for doc in cursor]
-
