@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 import random
 from flights.models import Flight
 from flights.repositories import FlightRepository
-
 import uuid
 
 class Command(BaseCommand):
@@ -39,8 +38,8 @@ class Command(BaseCommand):
                         
                         duration_minutes = (base_duration_hours * 60) + duration_variance
                         arrival = departure + timedelta(minutes=duration_minutes)
-                        
                         airline = random.choice(airlines)
+                        
                         base_cost = 100 + (base_duration_hours * 50) 
                         price_variance = random.randint(-50, 200)
                         price = base_cost + price_variance
@@ -62,7 +61,7 @@ class Command(BaseCommand):
                             repo.insert_many(flights)
                             flights = []
                             self.stdout.write(f"Inserted batch... current date: {current_date.date()}")
+
         if flights:
             repo.insert_many(flights)
-        
         self.stdout.write(self.style.SUCCESS(f'Successfully seeded database. All routes covered.'))
