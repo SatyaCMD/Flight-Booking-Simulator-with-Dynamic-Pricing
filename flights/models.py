@@ -52,7 +52,7 @@ class Booking:
     flight_number: str
     booking_date: datetime
     passenger_details: List[dict] 
-    flight_id: Optional[str] = None # Added to link to specific flight instance
+    flight_id: Optional[str] = None 
     travel_class: str = "Economy"
     status: str = "CONFIRMED"
     
@@ -70,3 +70,4 @@ class FareHistory:
 
     def to_dict(self):
         return asdict(self)
+
