@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="/static/css/style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <nav class="navbar">
         <div class="logo">
@@ -46,7 +47,6 @@
                     Find Booking <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
                 </button>
             </form>
-
             <div style="margin-top: 2rem; text-align: center; font-size: 0.9rem; color: var(--text-muted);">
                 Check-in opens 24 hours before departure.
             </div>
@@ -80,7 +80,6 @@
                 e.preventDefault();
                 const pnr = pnrInput.value.trim();
                 const lastname = lastnameInput.value.trim();
-
                 if (!pnr || !lastname) return;
 
                 const originalBtnContent = btn.innerHTML;
@@ -121,7 +120,6 @@
                                         <span style="font-weight: 600;">${result.booking.passenger_details.length}</span>
                                     </div>
                                 </div>
-
                                 <button onclick="window.location.reload()" class="btn btn-primary" style="width: 100%;">Check in another booking</button>
                             </div>
                         `;
@@ -140,6 +138,5 @@
         });
     </script>
 </body>
-
 
 </html>
