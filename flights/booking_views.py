@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .repositories import BookingRepository, FlightRepository
 from .models import Booking
+from core.db import get_captchas_collection
 from datetime import datetime
 import uuid
 
@@ -14,6 +15,19 @@ class BookingCreateView(APIView):
         flight_id = data.get('flight_id')
         passenger_details = data.get('passenger_details')
         travel_class = data.get('travel_class', 'Economy')
+        captcha_id = data.get('captcha_id')
+        captcha_value = data.get('captcha_value')
+
+        if not captcha_id or not captcha_value:
+            return Response({'error': 'Captcha is required for payment'}, status=status.HTTP_400_BAD_REQUEST)
+
+        captchas = get_captchas_collection()
+        stored = captchas.find_one({'captcha_id': captcha_id})
+        
+        if not stored or stored['text'] != captcha_value.upper():
+            return Response({'error': 'Invalid Captcha'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        captchas.delete_one({'captcha_id': captcha_id})
         
         if not user_email or not flight_number:
             return Response({'error': 'User email and flight number are required'}, status=status.HTTP_400_BAD_REQUEST)
@@ -23,6 +37,7 @@ class BookingCreateView(APIView):
 
         import random
         import string
+
         transaction_id = "TXN" + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
 
         for passenger in passenger_details:
@@ -32,8 +47,9 @@ class BookingCreateView(APIView):
                 col = random.choice(['A', 'F'])
             elif preference == 'Aisle':
                 col = random.choice(['C', 'D'])
-            else: 
+            else:
                 col = random.choice(['B', 'E'])
+            
             passenger['seat_number'] = f"{row}{col}"
 
         booking = Booking(
@@ -50,6 +66,7 @@ class BookingCreateView(APIView):
 
         repo = BookingRepository()
         repo.create(booking)
+
         flight_repo = FlightRepository()
         flight_repo.decrement_seats(flight_id, len(passenger_details))
 
@@ -66,6 +83,7 @@ class BookingListView(APIView):
         
         repo = BookingRepository()
         bookings = repo.get_by_user(email)
+        
         flight_repo = FlightRepository()
         results = []
         for booking in bookings:
@@ -81,6 +99,7 @@ class BookingListView(APIView):
                         'airline_code': flight.airline_code
                     }
             results.append(b_dict)
+            
         return Response(results)
 
 class BookingCheckinView(APIView):
@@ -96,10 +115,12 @@ class BookingCheckinView(APIView):
         
         if not booking_doc:
             return Response({'error': 'Booking not found'}, status=status.HTTP_404_NOT_FOUND)
+        
         if '_id' in booking_doc:
             del booking_doc['_id']
             
         booking = Booking(**booking_doc)
+        
         passenger_found = False
         for p in booking.passenger_details:
             if lastname.lower() in p.get('name', '').lower():
@@ -133,6 +154,7 @@ class BookingReceiptView(APIView):
         try:
             repo = BookingRepository()
             flight_repo = FlightRepository()
+            
             booking_doc = repo.collection.find_one({
                 '$or': [
                     {'transaction_id': booking_id},
@@ -173,7 +195,7 @@ class UserStatsView(APIView):
         bookings = booking_repo.get_by_user(email)
         
         total_flights = len(bookings)
-        miles_earned = total_flights * 1250 # Simulated miles
+        miles_earned = total_flights * 1250 
         
         next_trip = None
         min_diff = float('inf')
@@ -198,3 +220,35 @@ class UserStatsView(APIView):
             'next_trip': next_trip
         })
 
+class BookingDownloadReceiptView(APIView):
+    def get(self, request, booking_id):
+        try:
+            repo = BookingRepository()
+            flight_repo = FlightRepository()
+            
+            booking_doc = repo.collection.find_one({
+                '$or': [
+                    {'transaction_id': booking_id},
+                    {'booking_reference': booking_id}
+                ]
+            })
+            
+            if not booking_doc:
+                return Response({'error': 'Booking not found'}, status=status.HTTP_404_NOT_FOUND)
+                
+            if '_id' in booking_doc:
+                del booking_doc['_id']
+                
+            booking = Booking(**booking_doc)
+            flight = None
+            if booking.flight_id:
+                flight = flight_repo.get_flight_by_id(booking.flight_id)
+                
+            return render(request, 'receipt.html', {
+                'booking': booking, 
+                'flight': flight
+            })
+            
+        except Exception as e:
+            print(f"Error generating receipt: {e}")
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
