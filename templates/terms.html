@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service | SkyHigh</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#B91C1C',
+                        secondary: '#B45309',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+
+<body class="font-sans text-gray-800 antialiased min-h-screen flex flex-col">
+    <nav class="bg-white/95 backdrop-blur-md shadow-md fixed w-full z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 text-2xl font-serif font-bold text-primary">
+                <i class="fas fa-plane-departure"></i> SkyHigh
+            </div>
+            <div class="flex items-center gap-8 font-medium text-black">
+                <a href="/" class="hover:text-primary transition-colors font-bold">Book Flight</a>
+                <a href="/profile/" class="hover:text-primary transition-colors font-bold">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 py-32">
+        <div class="glass-panel max-w-4xl mx-auto p-12 rounded-3xl shadow-2xl">
+            <h1 class="font-serif text-4xl font-bold text-primary mb-8 text-center">Terms of Service</h1>
+            <div class="space-y-6 text-lg leading-relaxed">
+                <p>Welcome to SkyHigh Airlines. By using our website and services, you agree to comply with and be bound
+                    by the following terms and conditions.</p>
+
+                <h3 class="font-serif text-2xl font-bold mt-8 mb-4">Booking & Reservations</h3>
+                <p>All bookings are subject to availability and confirmation. Prices are subject to change without
+                    notice until the booking is confirmed.</p>
+
+                <h3 class="font-serif text-2xl font-bold mt-8 mb-4">Cancellations & Refunds</h3>
+                <p>Cancellation policies vary by fare class. Please review the specific terms associated with your
+                    ticket before purchase. Refunds, if applicable, will be processed according to our refund policy.
+                </p>
+
+                <h3 class="font-serif text-2xl font-bold mt-8 mb-4">User Conduct</h3>
+                <p>You agree to use our website for lawful purposes only and not to engage in any activity that disrupts
+                    or interferes with our services.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white/95 backdrop-blur-md border-t border-gray-200 py-8 mt-auto">
+        <div class="container mx-auto px-6 text-center text-gray-500 text-sm font-bold">
+            &copy; 2025 SkyHigh Airlines. All rights reserved.
+        </div>
+    </footer>
+</body>
+
+</html>

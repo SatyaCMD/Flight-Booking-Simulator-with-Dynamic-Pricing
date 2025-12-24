@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt - {{ booking.transaction_id }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #B91C1C;
+            --secondary: #B45309;
+            --dark: #1E293B;
+            --bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--dark);
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .receipt-container {
+            background: white;
+            width: 100%;
+            max-width: 800px;
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .receipt-title {
+            text-align: right;
+        }
+
+        .receipt-title h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin: 0;
+        }
+
+        .receipt-title p {
+            color: #64748b;
+            margin: 0.25rem 0 0;
+        }
+
+        .grid-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-group .value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .table-container {
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8fafc;
+            text-align: left;
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+            font-weight: 500;
+        }
+
+        .total-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 3rem;
+        }
+
+        .total-box {
+            background: #fef2f2;
+            padding: 1.5rem 2.5rem;
+            border-radius: 16px;
+            text-align: right;
+        }
+
+        .total-label {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .total-amount {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #f1f5f9;
+            padding-top: 2rem;
+        }
+
+        .qr-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .qr-code {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #e2e8f0;
+            padding: 0.25rem;
+            border-radius: 8px;
+        }
+
+        .print-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--dark);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-3px);
+            background: black;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .receipt-container {
+                box-shadow: none;
+                border: none;
+                max-width: 100%;
+            }
+
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="receipt-container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-plane-departure"></i> SKYHIGH
+            </div>
+            <div class="receipt-title">
+                <h1>Payment Receipt</h1>
+                <p>#{{ booking.transaction_id }}</p>
+            </div>
+        </div>
+
+        <div class="grid-info">
+            <div class="info-group">
+                <label>Billed To</label>
+                <div class="value">{{ booking.user_email }}</div>
+                <div style="color: #64748b; font-size: 0.9rem; margin-top: 0.25rem;">
+                    {% if booking.passenger_details %}
+                    {{ booking.passenger_details.0.name }}
+                    {% else %}
+                    Guest
+                    {% endif %}
+                </div>
+            </div>
+            <div class="info-group" style="text-align: right;">
+                <label>Payment Date</label>
+                <div class="value">{{ booking.booking_date|date:"F d, Y" }}</div>
+                <div style="color: #64748b; font-size: 0.9rem; margin-top: 0.25rem;">
+                    {{ booking.booking_date|date:"H:i A" }}
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-info">
+            <div class="info-group">
+                <label>Payment Method</label>
+                <div class="value">
+                    <i class="fas fa-credit-card" style="margin-right: 0.5rem; color: #64748b;"></i>
+                    Credit Card (Visa)
+                </div>
+            </div>
+            <div class="info-group" style="text-align: right;">
+                <label>Booking Reference</label>
+                <div class="value" style="font-family: 'Fira Code', monospace;">{{ booking.booking_reference }}</div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Qty</th>
+                        <th style="text-align: right;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            Flight Ticket ({{ booking.flight_number }})
+                            <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">
+                                {{ booking.travel_class }} Class • {{ flight.origin }} to {{ flight.destination }}
+                            </div>
+                        </td>
+                        <td>{{ booking.passenger_details|length }}</td>
+                        <td style="text-align: right;">${{ flight.base_price }}</td>
+                    </tr>
+                    <tr>
+                        <td>Taxes & Fees</td>
+                        <td>-</td>
+                        <td style="text-align: right;">$45.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="total-section">
+            <div class="total-box">
+                <div class="total-label">Total Amount Paid</div>
+                <div class="total-amount">$1,245.00</div> <!-- Mocked Total -->
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="qr-section">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TXN:{{ booking.transaction_id }}|PNR:{{ booking.booking_reference }}|PAX:{{ booking.passenger_details.0.name }}"
+                    class="qr-code" alt="Verification QR">
+                <div style="font-size: 0.8rem; color: #64748b;">
+                    <strong>Scan to Verify</strong><br>
+                    Transaction Authenticity
+                </div>
+            </div>
+            <div style="text-align: right; font-size: 0.9rem; color: #94a3b8;">
+                <p>Thank you for flying with SkyHigh.</p>
+                <p>For support: help@skyhigh.com</p>
+            </div>
+        </div>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">
+        <i class="fas fa-download"></i> Download Receipt
+    </button>
+</body>
+
+</html>
