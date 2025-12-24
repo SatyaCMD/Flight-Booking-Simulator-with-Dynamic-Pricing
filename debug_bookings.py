@@ -7,9 +7,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'flight_simulator.settings')
 django.setup()
 
 from flights.repositories import BookingRepository
-
 repo = BookingRepository()
 bookings = repo.collection.find({})
+
 print(f"Found {repo.collection.count_documents({})} bookings.")
 
 for b in bookings:
