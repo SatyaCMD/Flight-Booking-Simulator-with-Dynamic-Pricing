@@ -26,7 +26,6 @@ class Command(BaseCommand):
 
                     change = random.uniform(-0.1, 0.1)
                     flight.demand_level = max(0.5, min(2.0, flight.demand_level + change))
-                    
                     old_price = flight.current_price
                     new_price = PricingEngine.calculate_price(flight)
                     
@@ -52,4 +51,3 @@ class Command(BaseCommand):
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Error in simulation: {e}"))
                 time.sleep(5)
-
