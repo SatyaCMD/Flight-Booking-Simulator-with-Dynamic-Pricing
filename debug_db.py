@@ -10,6 +10,7 @@ from flights.repositories import FlightRepository
 
 def debug_flights():
     repo = FlightRepository()
+    
     total_count = repo.collection.count_documents({})
     print(f"Total flights in DB: {total_count}")
     
