@@ -11,12 +11,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-(qs9e347_y$eyq&msee9#ph2_a!&lv(+w^a)$gab5q8an(i3%2'
 DEBUG = True
-
 ALLOWED_HOSTS = ['*']
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -85,8 +85,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
