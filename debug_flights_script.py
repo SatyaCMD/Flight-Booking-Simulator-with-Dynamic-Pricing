@@ -13,7 +13,6 @@ def debug_flights():
     repo = FlightRepository()
     flights = repo.find_all()
     print(f"Total Flights in DB: {len(flights)}")
-    
     print(f"Total Flights in DB: {len(flights)}")
     print("Seeding flights...")
     seed_flights(repo)
@@ -23,6 +22,7 @@ def seed_flights(repo):
     destinations = ['JFK', 'LHR', 'LAX', 'SFO', 'DXB', 'SIN', 'HND', 'CDG']
     airlines = ['AA', 'BA', 'DL', 'EK', 'SQ', 'JL', 'AF']
     new_flights = []
+    
     start_date = datetime.now()
     for i in range(30):
         current_date = start_date + timedelta(days=i)
@@ -51,6 +51,7 @@ def seed_flights(repo):
             hour = random.randint(6, 22)
             minute = random.choice([0, 15, 30, 45])
             departure = current_date.replace(hour=hour, minute=minute, second=0, microsecond=0)
+            
             duration_hours = random.randint(2, 14)
             arrival = departure + timedelta(hours=duration_hours)
             
