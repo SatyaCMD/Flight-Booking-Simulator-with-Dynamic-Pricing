@@ -10,9 +10,11 @@
     --text-light: #ccd6f6;
     --success-color: #64ffda;
     --danger-color: #ff5f5f;
+
     --glass-bg: rgba(17, 34, 64, 0.6);
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+
     --container-width: 1200px;
     --header-height: 80px;
 }
@@ -258,7 +260,7 @@ textarea:focus {
 
 .airline-logo {
     font-weight: 700;
-    color: var(--text-main);
+    color: black;
     font-size: 1.1rem;
     display: flex;
     align-items: center;
@@ -280,7 +282,7 @@ textarea:focus {
 .time {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--text-main);
+    color: black;
 }
 
 .airport-code {
@@ -328,7 +330,7 @@ textarea:focus {
 .price {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--text-main);
+    color: black;
     display: block;
     margin-bottom: 0.25rem;
 }
@@ -433,4 +435,12 @@ footer {
     background: var(--primary-color);
     color: var(--secondary-color);
     box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+}
+
+.text-black-important {
+    color: black !important;
+}
+
+.hidden {
+    display: none !important;
 }
