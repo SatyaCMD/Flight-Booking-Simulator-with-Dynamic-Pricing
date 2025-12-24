@@ -35,3 +35,6 @@ def get_users_collection():
 
 def get_bookings_collection():
     return MongoDB.get_db()['bookings']
+
+def get_captchas_collection():
+    return MongoDB.get_db()['captchas']
