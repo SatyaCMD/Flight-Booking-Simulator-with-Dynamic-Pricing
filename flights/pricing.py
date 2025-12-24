@@ -13,12 +13,13 @@ class PricingEngine:
         """
         
         price = flight.base_price
+        
         now = datetime.now()
         if flight.departure_time > now:
             days_to_departure = (flight.departure_time - now).days
             
             if days_to_departure < 3:
-                price *= 1.5  
+                price *= 1.5 
             elif days_to_departure < 7:
                 price *= 1.3
             elif days_to_departure < 14:
@@ -30,13 +31,12 @@ class PricingEngine:
             load_factor = (flight.total_seats - flight.available_seats) / flight.total_seats
             
             if load_factor > 0.9:
-                price *= 1.4 # Very few seats left
+                price *= 1.4
             elif load_factor > 0.7:
                 price *= 1.2
             elif load_factor < 0.2:
-                price *= 0.9 # Empty flight discount
+                price *= 0.9 
                 
         price *= flight.demand_level
         min_price = flight.base_price * 0.5
         return max(round(price, 2), min_price)
-
