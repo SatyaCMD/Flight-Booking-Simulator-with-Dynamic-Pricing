@@ -1,3 +1,4 @@
+
 from datetime import datetime
 from typing import List, Optional
 from core.db import get_flights_collection
@@ -31,7 +32,8 @@ class FlightRepository:
                     '$lte': end_date
                 }
             except ValueError:
-                pass # Ignore invalid date format for now
+                pass
+
         print(f"DEBUG: Search Query: {query}")
         
         sort_criteria = []
@@ -50,6 +52,7 @@ class FlightRepository:
             cursor = self.collection.find(query, {'_id': 0}).sort(sort_criteria)
         else:
             cursor = self.collection.find(query, {'_id': 0})
+            
         results = [Flight(**doc) for doc in cursor]
         
         if sort_by == 'duration_asc':
