@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import random
 from flights.models import Flight
 from flights.repositories import FlightRepository
+
 import uuid
 
 class Command(BaseCommand):
@@ -19,6 +20,7 @@ class Command(BaseCommand):
         base_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         
         self.stdout.write("Generating flights... this may take a moment.")
+
         for origin in airports:
             for destination in airports:
                 if origin == destination:
@@ -38,6 +40,7 @@ class Command(BaseCommand):
                         
                         duration_minutes = (base_duration_hours * 60) + duration_variance
                         arrival = departure + timedelta(minutes=duration_minutes)
+                        
                         airline = random.choice(airlines)
                         
                         base_cost = 100 + (base_duration_hours * 50) 
@@ -57,6 +60,7 @@ class Command(BaseCommand):
                             available_seats=random.randint(10, 180)
                         )
                         flights.append(flight)
+                        
                         if len(flights) >= 5000:
                             repo.insert_many(flights)
                             flights = []
@@ -64,4 +68,5 @@ class Command(BaseCommand):
 
         if flights:
             repo.insert_many(flights)
+        
         self.stdout.write(self.style.SUCCESS(f'Successfully seeded database. All routes covered.'))
