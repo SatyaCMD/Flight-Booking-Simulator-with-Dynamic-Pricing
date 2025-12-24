@@ -4,7 +4,7 @@ from typing import List, Optional
 
 @dataclass
 class Airport:
-    code: str 
+    code: str  
     name: str
     city: str
     country: str
@@ -32,7 +32,7 @@ class Flight:
     base_price: float
     total_seats: int
     available_seats: int
-    status: str = "SCHEDULED"  
+    status: str = "SCHEDULED" 
     
     current_price: Optional[float] = None
     demand_level: float = 1.0 
@@ -66,8 +66,7 @@ class FareHistory:
     flight_id: str
     price: float
     timestamp: datetime
-    reason: str
+    reason: str 
 
     def to_dict(self):
         return asdict(self)
-
