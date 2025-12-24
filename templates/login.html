@@ -1,164 +1,277 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | SkyHigh</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css?v=3">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#B91C1C', 
+                        secondary: '#B45309',
+                        dark: '#1E293B',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                        mono: ['"Fira Code"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #fff;
+            width: 20px;
+            height: 20px;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
 </head>
 
-<body>
-    <nav class="navbar">
-        <div class="logo">
-            <a href="/" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
+<body class="font-sans text-black antialiased min-h-screen flex flex-col">
+    <nav class="bg-white/95 backdrop-blur-md shadow-md fixed w-full z-50 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 text-2xl font-serif font-bold text-primary">
                 <i class="fas fa-plane-departure"></i> SkyHigh
-            </a>
-        </div>
-        <div class="nav-links">
-            <a href="/">Book Flight</a>
-            <a href="/my-trips/">My Trips</a>
-            <a href="/check-in/">Check-in</a>
-            <a href="/profile/" class="profile-link hidden">Profile</a>
-            <a href="/login/" class="login-btn btn btn-primary" style="padding: 0.5rem 1.2rem;">Login</a>
+            </div>
+            <div class="hidden md:flex items-center gap-8 font-medium text-black">
+                <a href="/" class="hover:text-primary transition-colors font-bold">Book Flight</a>
+                <a href="/my-trips/" class="hover:text-primary transition-colors font-bold">My Trips</a>
+                <a href="/check-in/" class="hover:text-primary transition-colors font-bold">Check-in</a>
+                <a href="/profile/"
+                    class="profile-link hidden hover:text-primary transition-colors font-bold">Dashboard</a>
+                <a href="/login/"
+                    class="login-btn bg-primary text-white px-6 py-2 rounded-full hover:bg-red-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-bold">Login</a>
+            </div>
         </div>
     </nav>
 
-    <main class="container" style="justify-content: center; min-height: 80vh; align-items: center; display: flex;">
-        <div class="glass-panel" style="max-width: 450px; width: 100%; padding: 2.5rem;">
+    <main class="flex-grow flex items-center justify-center px-4 py-24">
+        <div class="glass-panel w-[90%] max-w-[700px] p-6 md:p-8 rounded-3xl relative overflow-hidden mx-auto">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary to-secondary"></div>
 
             <div id="login-container">
-                <h2 style="text-align: center; margin-bottom: 0.5rem; font-size: 2rem;">Welcome Back</h2>
-                <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Enter your details to
-                    access your account</p>
+                <div class="text-center mb-8">
+                    <div
+                        class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 text-primary text-2xl shadow-sm border border-red-100">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h2 class="font-serif text-3xl font-bold text-black mb-2">Welcome Back</h2>
+                    <p class="text-black text-lg font-medium">Enter your details to access your account</p>
+                </div>
 
-                <form id="login-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                <form id="login-form" class="flex flex-col gap-6">
                     <div class="form-group">
-                        <label for="login-email">Email Address</label>
-                        <input type="email" id="login-email" name="email" placeholder="name@example.com" required>
+                        <label for="login-email" class="block text-black font-bold mb-2 text-lg">Email Address</label>
+                        <input type="email" id="login-email" name="email" placeholder="name@example.com" required
+                            class="w-full p-4 text-lg border-2 border-gray-300 rounded-xl focus:border-primary focus:outline-none transition-colors bg-white text-black placeholder-gray-500 font-medium">
                     </div>
+                    <div class="form-group relative">
+                        <label for="login-password" class="block text-black font-bold mb-2 text-lg">Password</label>
+                        <div class="relative">
+                            <input type="password" id="login-password" name="password" placeholder="Enter your password"
+                                required
+                                class="w-full p-4 pr-12 text-lg border-2 border-gray-300 rounded-xl focus:border-primary focus:outline-none transition-colors bg-white text-black placeholder-gray-500 font-medium">
+                            <button type="button" id="toggle-password"
+                                class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-primary transition-colors">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="form-group">
-                        <label for="login-password">Password</label>
-                        <input type="password" id="login-password" name="password" placeholder="Enter your password"
-                            required>
+                        <label class="block text-black font-bold mb-2 text-lg">Security Check</label>
+                        <div class="flex items-center gap-4 mb-3">
+                            <div id="captcha-container"
+                                class="bg-white rounded-xl overflow-hidden h-[60px] w-[180px] flex items-center justify-center border-2 border-gray-300">
+                            </div>
+                            <button type="button" id="refresh-captcha"
+                                class="text-primary hover:text-red-700 transition-colors p-3 bg-red-50 rounded-full border border-red-100 shadow-sm">
+                                <i class="fas fa-sync-alt text-xl"></i>
+                            </button>
+                        </div>
+                        <input type="text" id="login-captcha" name="captcha_value" placeholder="Enter security code"
+                            required
+                            class="w-full p-4 text-lg border-2 border-gray-300 rounded-xl focus:border-primary focus:outline-none transition-colors bg-white text-black placeholder-gray-500 font-medium">
+                        <input type="hidden" id="login-captcha-id" name="captcha_id">
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1rem;">
+
+                    <button type="submit" style="display: flex !important;"
+                        class="w-full bg-primary hover:bg-red-700 text-white font-bold py-4 px-6 rounded-xl text-lg shadow-lg transform transition hover:-translate-y-0.5 flex items-center justify-center gap-3">
                         <span class="btn-text">Sign In</span>
                         <div class="spinner hidden"></div>
                     </button>
                     <div id="login-error"
-                        style="color: var(--danger-color); text-align: center; font-size: 0.9rem; display: none; background: rgba(239, 68, 68, 0.1); padding: 0.75rem; border-radius: 8px;">
+                        class="hidden bg-red-50 text-red-600 p-4 rounded-xl text-center text-sm border border-red-100 font-bold">
                     </div>
                 </form>
-                <p style="text-align: center; margin-top: 2rem; color: var(--text-muted); font-size: 0.95rem;">
+                <p class="text-center mt-8 text-black text-lg font-medium">
                     Don't have an account? <a href="#" id="show-signup"
-                        style="color: var(--primary-color); font-weight: 600;">Sign up</a>
+                        class="text-primary font-bold hover:underline">Sign up</a>
                 </p>
             </div>
 
             <div id="otp-container" class="hidden">
-                <div style="text-align: center; margin-bottom: 2rem;">
+                <div class="text-center mb-8">
                     <div
-                        style="width: 60px; height: 60px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: var(--primary-color); font-size: 1.5rem;">
+                        class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 text-primary text-3xl shadow-sm border border-red-100">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h2 style="margin-bottom: 0.5rem;">Verification</h2>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">
+                    <h2 class="font-serif text-3xl font-bold text-black mb-2">Verification</h2>
+                    <p class="text-black text-lg font-medium">
                         We've sent a 6-digit code to your email.
                     </p>
                 </div>
 
                 <div
-                    style="background: rgba(234, 179, 8, 0.1); color: #fbbf24; padding: 0.75rem; border-radius: 8px; text-align: center; margin-bottom: 2rem; border: 1px dashed rgba(234, 179, 8, 0.3); font-size: 0.9rem;">
-                    <i class="fas fa-bug" style="margin-right: 0.5rem;"></i> DEBUG: OTP is <strong id="debug-otp-value"
-                        style="font-family: monospace; font-size: 1.1rem;"></strong>
+                    class="bg-yellow-50 text-yellow-800 p-4 rounded-xl text-center mb-6 border border-yellow-200 text-sm font-bold">
+                    <i class="fas fa-bug mr-2"></i> DEBUG: OTP is <strong id="debug-otp-value"
+                        class="font-mono text-lg"></strong>
                 </div>
 
-                <form id="otp-form" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <form id="otp-form" class="flex flex-col gap-6">
                     <input type="hidden" id="otp-email" name="email">
                     <div class="form-group">
                         <input type="text" id="otp-input" name="otp" placeholder="000000" required maxlength="6"
-                            style="text-align: center; letter-spacing: 0.5rem; font-size: 2rem; font-weight: 700; padding: 1rem;">
+                            class="w-full p-4 text-center text-4xl font-bold tracking-[0.5em] border-2 border-gray-300 rounded-xl focus:border-primary focus:outline-none transition-colors bg-white placeholder-gray-300 font-mono text-black">
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">
+                    <button type="submit"
+                        class="w-full bg-primary hover:bg-red-700 text-white font-bold py-4 px-6 rounded-xl text-lg shadow-lg transform transition hover:-translate-y-0.5 flex items-center justify-center gap-3">
                         <span class="btn-text">Verify & Login</span>
                         <div class="spinner hidden"></div>
                     </button>
-                    <button type="button" id="resend-otp-btn" class="btn btn-secondary"
-                        style="width: 100%; padding: 1rem; background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color);">
+                    <button type="button" id="resend-otp-btn"
+                        class="w-full bg-transparent border-2 border-primary text-primary hover:bg-red-50 font-bold py-4 px-6 rounded-xl text-lg transition-colors flex items-center justify-center gap-3">
                         <span class="btn-text">Resend OTP</span>
-                        <div class="spinner hidden"></div>
+                        <div class="spinner hidden border-primary border-t-transparent"></div>
                     </button>
                     <div id="otp-error"
-                        style="color: var(--danger-color); text-align: center; font-size: 0.9rem; display: none; background: rgba(239, 68, 68, 0.1); padding: 0.75rem; border-radius: 8px;">
+                        class="hidden bg-red-50 text-red-600 p-4 rounded-xl text-center text-sm border border-red-100 font-bold">
                     </div>
                     <div id="otp-success"
-                        style="color: var(--success-color); text-align: center; font-size: 0.9rem; display: none; background: rgba(34, 197, 94, 0.1); padding: 0.75rem; border-radius: 8px;">
+                        class="hidden bg-green-50 text-green-600 p-4 rounded-xl text-center text-sm border border-green-100 font-bold">
                     </div>
                 </form>
             </div>
 
             <div id="signup-container" class="hidden">
-                <h2 style="text-align: center; margin-bottom: 0.5rem; font-size: 2rem;">Create Account</h2>
-                <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Join SkyHigh for premium
-                    travel</p>
+                <div class="text-center mb-8">
+                    <div
+                        class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 text-primary text-2xl shadow-sm border border-red-100">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h2 class="font-serif text-3xl font-bold text-black mb-2">Create Account</h2>
+                    <p class="text-black text-lg font-medium">Join SkyHigh for premium travel</p>
+                </div>
 
-                <form id="signup-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                <form id="signup-form" class="flex flex-col gap-6">
                     <div class="form-group">
-                        <label for="signup-name">Full Name</label>
-                        <input type="text" id="signup-name" name="name" placeholder="e.g. John Doe" required>
+                        <label for="signup-name" class="block text-black font-bold mb-2 text-lg">Full Name</label>
+                        <input type="text" id="signup-name" name="name" placeholder="e.g. John Doe" required
+                            class="w-full p-4 text-lg border-2 border-gray-300 rounded-xl focus:border-primary focus:outline-none transition-colors bg-white text-black placeholder-gray-500 font-medium">
                     </div>
                     <div class="form-group">
-                        <label for="signup-email">Email Address</label>
-                        <input type="email" id="signup-email" name="email" placeholder="name@example.com" required>
+                        <label for="signup-email" class="block text-black font-bold mb-2 text-lg">Email Address</label>
+                        <input type="email" id="signup-email" name="email" placeholder="name@example.com" required
+                            class="w-full p-4 text-lg border-2 border-gray-300 rounded-xl focus:border-primary focus:outline-none transition-colors bg-white text-black placeholder-gray-500 font-medium">
                     </div>
                     <div class="form-group">
-                        <label for="signup-password">Password</label>
+                        <label for="signup-password" class="block text-black font-bold mb-2 text-lg">Password</label>
                         <input type="password" id="signup-password" name="password"
-                            placeholder="Create a strong password" required>
+                            placeholder="Create a strong password" required
+                            class="w-full p-4 text-lg border-2 border-gray-300 rounded-xl focus:border-primary focus:outline-none transition-colors bg-white text-black placeholder-gray-500 font-medium">
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1rem;">
+                    <button type="submit"
+                        class="w-full bg-primary hover:bg-red-700 text-white font-bold py-4 px-6 rounded-xl text-lg shadow-lg transform transition hover:-translate-y-0.5 flex items-center justify-center gap-3">
                         <span class="btn-text">Create Account</span>
                         <div class="spinner hidden"></div>
                     </button>
                     <div id="signup-error"
-                        style="color: var(--danger-color); text-align: center; font-size: 0.9rem; display: none; background: rgba(239, 68, 68, 0.1); padding: 0.75rem; border-radius: 8px;">
+                        class="hidden bg-red-50 text-red-600 p-4 rounded-xl text-center text-sm border border-red-100 font-bold">
                     </div>
                 </form>
-                <p style="text-align: center; margin-top: 2rem; color: var(--text-muted); font-size: 0.95rem;">
+                <p class="text-center mt-8 text-black text-lg font-medium">
                     Already have an account? <a href="#" id="show-login"
-                        style="color: var(--primary-color); font-weight: 600;">Sign in</a>
+                        class="text-primary font-bold hover:underline">Sign in</a>
                 </p>
             </div>
+
         </div>
     </main>
 
-    <footer>
-        <div class="container" style="text-align: center;">
-            <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem;">
-                <a href="#" style="color: var(--text-muted);">About Us</a>
-                <a href="#" style="color: var(--text-muted);">Contact</a>
-                <a href="#" style="color: var(--text-muted);">Privacy Policy</a>
-                <a href="#" style="color: var(--text-muted);">Terms of Service</a>
+    <footer class="bg-white/95 backdrop-blur-md border-t border-gray-200 py-8">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex justify-center gap-8 mb-4 text-gray-600 font-medium">
+                <a href="/about/" class="hover:text-primary transition-colors">About Us</a>
+                <a href="/contact/" class="hover:text-primary transition-colors">Contact</a>
+                <a href="/privacy/" class="hover:text-primary transition-colors">Privacy Policy</a>
+                <a href="/terms/" class="hover:text-primary transition-colors">Terms of Service</a>
             </div>
-            <div style="color: var(--text-light); font-size: 0.9rem;">
+            <div class="text-gray-500 text-sm font-bold">
                 &copy; 2025 SkyHigh Airlines. All rights reserved.
             </div>
         </div>
     </footer>
 
-    <script src="/static/js/app.js"></script>
+    <script src="/static/js/app.js?v=3"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            console.log("Login Page Loaded");
+
             const loginContainer = document.getElementById('login-container');
             const signupContainer = document.getElementById('signup-container');
             const otpContainer = document.getElementById('otp-container');
             const showSignupBtn = document.getElementById('show-signup');
             const showLoginBtn = document.getElementById('show-login');
+
+            if (!loginContainer || !signupContainer || !otpContainer) {
+                console.error("Critical elements missing");
+                return;
+            }
 
             showSignupBtn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -174,90 +287,139 @@
                 otpContainer.classList.add('hidden');
             });
 
-            const loginForm = document.getElementById('login-form');
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = loginForm.querySelector('button');
-                const spinner = btn.querySelector('.spinner');
-                const errorDiv = document.getElementById('login-error');
-
-                btn.disabled = true;
-                spinner.classList.remove('hidden');
-                errorDiv.style.display = 'none';
-
-                const formData = new FormData(loginForm);
-                const data = Object.fromEntries(formData.entries());
-
+            async function loadCaptcha() {
                 try {
-                    const response = await fetch('/api/flights/auth/login/', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    });
-                    const result = await response.json();
-
-                    if (response.ok) {
-                        if (result.status === 'OTP_REQUIRED') {
-                            loginContainer.classList.add('hidden');
-                            otpContainer.classList.remove('hidden');
-                            document.getElementById('otp-email').value = result.email;
-                            document.getElementById('debug-otp-value').textContent = result.debug_otp;
-                        } else {
-                            localStorage.setItem('user', JSON.stringify(result.user));
-                            window.location.href = '/';
-                        }
-                    } else {
-                        errorDiv.textContent = result.error || 'Login failed';
-                        errorDiv.style.display = 'block';
+                    console.log("Loading captcha...");
+                    const res = await fetch('/api/flights/auth/captcha/');
+                    if (!res.ok) throw new Error("Captcha fetch failed");
+                    const data = await res.json();
+                    const container = document.getElementById('captcha-container');
+                    if (container) {
+                        container.innerHTML = data.svg;
+                        document.getElementById('login-captcha-id').value = data.captcha_id;
                     }
-                } catch (err) {
-                    errorDiv.textContent = 'An error occurred. Please try again.';
-                    errorDiv.style.display = 'block';
-                } finally {
-                    btn.disabled = false;
-                    spinner.classList.add('hidden');
+                } catch (e) {
+                    console.error("Failed to load captcha", e);
+                    const container = document.getElementById('captcha-container');
+                    if (container) container.innerHTML = '<span class="text-red-500 text-xs font-bold">Error loading captcha</span>';
                 }
-            });
+            }
+
+            loadCaptcha();
+
+            const refreshBtn = document.getElementById('refresh-captcha');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', (e) => {
+                    e.preventDefault(); 
+                    loadCaptcha();
+                });
+            }
+
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    console.log("Login form submitted");
+
+                    const btn = loginForm.querySelector('button[type="submit"]');
+                    const spinner = btn.querySelector('.spinner');
+                    const errorDiv = document.getElementById('login-error');
+
+                    btn.disabled = true;
+                    spinner.classList.remove('hidden');
+                    errorDiv.style.display = 'none';
+                    errorDiv.classList.add('hidden');
+
+                    const formData = new FormData(loginForm);
+                    const data = Object.fromEntries(formData.entries());
+
+                    try {
+                        const response = await fetch('/api/flights/auth/login/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await response.json();
+
+                        console.log("Login response:", result);
+
+                        if (response.ok) {
+                            if (result.status === 'OTP_REQUIRED') {
+                                loginContainer.classList.add('hidden');
+                                otpContainer.classList.remove('hidden');
+                                document.getElementById('otp-email').value = result.email;
+                                document.getElementById('debug-otp-value').textContent = result.debug_otp;
+                            } else {
+                                localStorage.setItem('user', JSON.stringify(result.user));
+                                window.location.href = '/';
+                            }
+                        } else {
+                            errorDiv.textContent = result.error || 'Login failed';
+                            errorDiv.style.display = 'block';
+                            errorDiv.classList.remove('hidden');
+                            loadCaptcha(); 
+                        }
+                    } catch (err) {
+                        console.error("Login error:", err);
+                        errorDiv.textContent = 'An error occurred. Please check your connection.';
+                        errorDiv.style.display = 'block';
+                        errorDiv.classList.remove('hidden');
+                    } finally {
+                        btn.disabled = false;
+                        spinner.classList.add('hidden');
+                    }
+                });
+            } else {
+                console.error("Login form not found");
+            }
 
             const otpForm = document.getElementById('otp-form');
-            otpForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = otpForm.querySelector('button');
-                const spinner = btn.querySelector('.spinner');
-                const errorDiv = document.getElementById('otp-error');
-                const successDiv = document.getElementById('otp-success');
+            if (otpForm) {
+                otpForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const btn = otpForm.querySelector('button[type="submit"]');
+                    const spinner = btn.querySelector('.spinner');
+                    const errorDiv = document.getElementById('otp-error');
+                    const successDiv = document.getElementById('otp-success');
 
-                btn.disabled = true;
-                spinner.classList.remove('hidden');
-                errorDiv.style.display = 'none';
-                if (successDiv) successDiv.style.display = 'none';
-
-                const formData = new FormData(otpForm);
-                const data = Object.fromEntries(formData.entries());
-
-                try {
-                    const response = await fetch('/api/flights/auth/verify-otp/', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    });
-                    const result = await response.json();
-
-                    if (response.ok) {
-                        localStorage.setItem('user', JSON.stringify(result.user));
-                        window.location.href = '/';
-                    } else {
-                        errorDiv.textContent = result.error || 'Verification failed';
-                        errorDiv.style.display = 'block';
+                    btn.disabled = true;
+                    spinner.classList.remove('hidden');
+                    errorDiv.style.display = 'none';
+                    errorDiv.classList.add('hidden');
+                    if (successDiv) {
+                        successDiv.style.display = 'none';
+                        successDiv.classList.add('hidden');
                     }
-                } catch (err) {
-                    errorDiv.textContent = 'An error occurred. Please try again.';
-                    errorDiv.style.display = 'block';
-                } finally {
-                    btn.disabled = false;
-                    spinner.classList.add('hidden');
-                }
-            });
+
+                    const formData = new FormData(otpForm);
+                    const data = Object.fromEntries(formData.entries());
+
+                    try {
+                        const response = await fetch('/api/flights/auth/verify-otp/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            localStorage.setItem('user', JSON.stringify(result.user));
+                            window.location.href = '/';
+                        } else {
+                            errorDiv.textContent = result.error || 'Verification failed';
+                            errorDiv.style.display = 'block';
+                            errorDiv.classList.remove('hidden');
+                        }
+                    } catch (err) {
+                        errorDiv.textContent = 'An error occurred. Please try again.';
+                        errorDiv.style.display = 'block';
+                        errorDiv.classList.remove('hidden');
+                    } finally {
+                        btn.disabled = false;
+                        spinner.classList.add('hidden');
+                    }
+                });
+            }
 
             const resendOtpBtn = document.getElementById('resend-otp-btn');
             if (resendOtpBtn) {
@@ -272,7 +434,9 @@
                     resendOtpBtn.disabled = true;
                     spinner.classList.remove('hidden');
                     errorDiv.style.display = 'none';
+                    errorDiv.classList.add('hidden');
                     successDiv.style.display = 'none';
+                    successDiv.classList.add('hidden');
 
                     try {
                         const response = await fetch('/api/flights/auth/resend-otp/', {
@@ -285,9 +449,11 @@
                         if (response.ok) {
                             successDiv.textContent = 'OTP resent successfully!';
                             successDiv.style.display = 'block';
+                            successDiv.classList.remove('hidden');
                             document.getElementById('debug-otp-value').textContent = result.debug_otp;
+
                             let timeLeft = 60;
-                            spinner.classList.add('hidden'); // Hide spinner
+                            spinner.classList.add('hidden'); 
                             btnText.textContent = `Resend in ${timeLeft}s`;
 
                             const timerInterval = setInterval(() => {
@@ -304,12 +470,14 @@
                         } else {
                             errorDiv.textContent = result.error || 'Failed to resend OTP';
                             errorDiv.style.display = 'block';
+                            errorDiv.classList.remove('hidden');
                             resendOtpBtn.disabled = false;
                             spinner.classList.add('hidden');
                         }
                     } catch (err) {
                         errorDiv.textContent = 'An error occurred. Please try again.';
                         errorDiv.style.display = 'block';
+                        errorDiv.classList.remove('hidden');
                         resendOtpBtn.disabled = false;
                         spinner.classList.add('hidden');
                     }
@@ -317,44 +485,62 @@
             }
 
             const signupForm = document.getElementById('signup-form');
-            signupForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = signupForm.querySelector('button');
-                const spinner = btn.querySelector('.spinner');
-                const errorDiv = document.getElementById('signup-error');
+            if (signupForm) {
+                signupForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const btn = signupForm.querySelector('button[type="submit"]');
+                    const spinner = btn.querySelector('.spinner');
+                    const errorDiv = document.getElementById('signup-error');
 
-                btn.disabled = true;
-                spinner.classList.remove('hidden');
-                errorDiv.style.display = 'none';
+                    btn.disabled = true;
+                    spinner.classList.remove('hidden');
+                    errorDiv.style.display = 'none';
+                    errorDiv.classList.add('hidden');
 
-                const formData = new FormData(signupForm);
-                const data = Object.fromEntries(formData.entries());
+                    const formData = new FormData(signupForm);
+                    const data = Object.fromEntries(formData.entries());
 
-                try {
-                    const response = await fetch('/api/flights/auth/signup/', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    });
-                    const result = await response.json();
+                    try {
+                        const response = await fetch('/api/flights/auth/signup/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await response.json();
 
-                    if (response.ok) {
-                        alert('Account created! Please login.');
-                        signupContainer.classList.add('hidden');
-                        loginContainer.classList.remove('hidden');
-                    } else {
-                        errorDiv.textContent = result.error || 'Signup failed';
+                        if (response.ok) {
+                            alert('Account created! Please login.');
+                            signupContainer.classList.add('hidden');
+                            loginContainer.classList.remove('hidden');
+                        } else {
+                            errorDiv.textContent = result.error || 'Signup failed';
+                            errorDiv.style.display = 'block';
+                            errorDiv.classList.remove('hidden');
+                        }
+                    } catch (err) {
+                        errorDiv.textContent = 'An error occurred. Please try again.';
                         errorDiv.style.display = 'block';
+                        errorDiv.classList.remove('hidden');
+                    } finally {
+                        btn.disabled = false;
+                        spinner.classList.add('hidden');
                     }
-                } catch (err) {
-                    errorDiv.textContent = 'An error occurred. Please try again.';
-                    errorDiv.style.display = 'block';
-                } finally {
-                    btn.disabled = false;
-                    spinner.classList.add('hidden');
-                }
-            });
+                });
+            }
+
+            const togglePasswordBtn = document.getElementById('toggle-password');
+            const passwordInput = document.getElementById('login-password');
+
+            if (togglePasswordBtn && passwordInput) {
+                togglePasswordBtn.addEventListener('click', () => {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    togglePasswordBtn.querySelector('i').classList.toggle('fa-eye');
+                    togglePasswordBtn.querySelector('i').classList.toggle('fa-eye-slash');
+                });
+            }
         });
     </script>
 </body>
+
 </html>
