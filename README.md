@@ -101,16 +101,6 @@ python manage.py runserver (It will run successfully on https://127.0.0.1:8000)
 4.python fix_bookings.py
 ```
 
-
-### 🛠 Future Roadmap:-
-```bash
-1.🔜 Add REST API using DRF
-2.🔜 Add JWT Authentication
-3.🔜 Add React frontend
-4.🔜 Implement email ticket sending
-5.🔜 Add PDF boarding pass generator
-```
-
 ### 🤝 Contributing
 ```bash
 Pull requests are welcome!
