@@ -306,7 +306,7 @@
                                     <label class="block text-gray-700 font-medium mb-2 text-lg">Card Number</label>
                                     <div class="relative">
                                         <input type="text" id="card-input" placeholder="0000 0000 0000 0000"
-                                            maxlength="19" required
+                                            maxlength="19"
                                             class="w-full p-4 text-lg bg-white border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-colors font-mono">
                                         <i id="card-icon"
                                             class="fas fa-credit-card absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></i>
@@ -315,12 +315,12 @@
                                 <div class="grid grid-cols-2 gap-6">
                                     <div class="form-group">
                                         <label class="block text-gray-700 font-medium mb-2 text-lg">Expiry Date</label>
-                                        <input type="text" placeholder="MM/YY" maxlength="5" required
+                                        <input type="text" id="card-expiry" placeholder="MM/YY" maxlength="5"
                                             class="w-full p-4 text-lg bg-white border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-colors text-center font-mono">
                                     </div>
                                     <div class="form-group">
                                         <label class="block text-gray-700 font-medium mb-2 text-lg">CVV</label>
-                                        <input type="password" placeholder="123" maxlength="3" required
+                                        <input type="password" id="card-cvv" placeholder="123" maxlength="3"
                                             class="w-full p-4 text-lg bg-white border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-colors text-center font-mono">
                                     </div>
                                 </div>
@@ -871,6 +871,25 @@
                 const spinner = btn.querySelector('.spinner');
                 const btnText = btn.querySelector('.btn-text');
 
+                // Manual Validation
+                const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+                if (paymentMethod === 'card') {
+                    if (!document.getElementById('card-input').value || !document.getElementById('card-expiry').value || !document.getElementById('card-cvv').value) {
+                        alert('Please fill in all card details.');
+                        return;
+                    }
+                } else if (paymentMethod === 'upi') {
+                    if (!document.querySelector('#upi-details input').value) {
+                        alert('Please enter your UPI ID.');
+                        return;
+                    }
+                } else if (paymentMethod === 'netbanking') {
+                     if (!document.querySelector('#netbanking-details select').value) {
+                        alert('Please select a bank.');
+                        return;
+                    }
+                }
+
                 btn.disabled = true;
                 btnText.textContent = 'Processing...';
                 spinner.classList.remove('hidden');
@@ -905,6 +924,7 @@
                             passenger_details: passengers,
                             travel_class: document.getElementById('travel-class').value,
                             payment_method: document.querySelector('input[name="payment_method"]:checked').value,
+                            payment_details: getPaymentDetails(),
                             captcha_id: document.getElementById('booking-captcha-id').value,
                             captcha_value: document.getElementById('booking-captcha').value
                         })
@@ -976,4 +996,18 @@
                 });
             });
         });
+
+        function getPaymentDetails() {
+            const method = document.querySelector('input[name="payment_method"]:checked').value;
+            if (method === 'card') {
+                const cardNum = document.getElementById('card-input').value;
+                return cardNum ? `**** ${cardNum.slice(-4)}` : '';
+            } else if (method === 'upi') {
+                return document.querySelector('#upi-details input').value;
+            } else if (method === 'netbanking') {
+                return document.querySelector('#netbanking-details select').value;
+            }
+            return '';
+        }
+
     </script>
