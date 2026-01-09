@@ -57,6 +57,8 @@ class Booking:
     origin: Optional[str] = None
     destination: Optional[str] = None
     travel_class: str = "Economy"
+    payment_method: str = "Card"
+    payment_details: str = ""
     status: str = "CONFIRMED"
     
     def to_dict(self):
