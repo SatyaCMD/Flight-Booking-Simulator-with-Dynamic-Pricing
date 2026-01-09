@@ -47,6 +47,15 @@ class Command(BaseCommand):
                         price_variance = random.randint(-50, 200)
                         price = base_cost + price_variance
                         
+                        total_seats = random.choice([180, 200, 250, 300])
+                        seat_map = []
+                        seats_per_row = 6
+                        num_rows = total_seats // seats_per_row
+                        for _ in range(num_rows):
+                            row = "A" * seats_per_row
+                            row = row[:3] + "X" + row[3:]
+                            seat_map.append(row)
+
                         flight = Flight(
                             flight_id=str(uuid.uuid4()),
                             flight_number=f"{airline}{random.randint(1000, 9999)}",
@@ -56,8 +65,9 @@ class Command(BaseCommand):
                             departure_time=departure,
                             arrival_time=arrival,
                             base_price=float(price),
-                            total_seats=random.choice([180, 200, 250, 300]),
-                            available_seats=random.randint(10, 180)
+                            total_seats=total_seats,
+                            available_seats=random.randint(10, 180),
+                            seat_map=seat_map
                         )
                         flights.append(flight)
                         
