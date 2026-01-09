@@ -10,6 +10,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
+import random
+import string
 from io import BytesIO
 
 class BookingCreateView(APIView):
@@ -20,6 +22,8 @@ class BookingCreateView(APIView):
         flight_id = data.get('flight_id')
         passenger_details = data.get('passenger_details')
         travel_class = data.get('travel_class', 'Economy')
+        payment_method = data.get('payment_method', 'Card')
+        payment_details = data.get('payment_details', '')
         captcha_id = data.get('captcha_id')
         captcha_value = data.get('captcha_value')
 
@@ -39,6 +43,18 @@ class BookingCreateView(APIView):
             
         if not passenger_details or not isinstance(passenger_details, list) or len(passenger_details) == 0:
             return Response({'error': 'At least one passenger is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Validate Payment Details
+        if payment_method == 'upi':
+            if not payment_details or '@' not in payment_details:
+                return Response({'error': 'Invalid UPI ID'}, status=status.HTTP_400_BAD_REQUEST)
+        elif payment_method == 'netbanking':
+            if not payment_details:
+                return Response({'error': 'Bank selection is required for Net Banking'}, status=status.HTTP_400_BAD_REQUEST)
+        elif payment_method == 'card':
+             if not payment_details or len(payment_details) < 4:
+                 # In a real app we would validate the card token/details more thoroughly
+                 pass
 
         flight_repo = FlightRepository()
         flight = flight_repo.get_flight_by_id(flight_id)
@@ -91,6 +107,8 @@ class BookingCreateView(APIView):
             origin=flight.origin,
             destination=flight.destination,
             travel_class=travel_class,
+            payment_method=payment_method,
+            payment_details=payment_details,
             status="CONFIRMED"
         )
 
@@ -215,7 +233,9 @@ class BookingReceiptView(APIView):
                 if not flight and booking.flight_number:
                     flight = flight_repo.get_flight_by_number(booking.flight_number)
             
-            gate = "A12" 
+            gate_letter = random.choice(['A', 'B', 'C', 'D', 'E', 'F'])
+            gate_number = random.randint(1, 12)
+            gate = f"{gate_letter}{gate_number}" 
             boarding_time = None
             if flight and flight.departure_time:
                 boarding_time = flight.departure_time - timedelta(minutes=45)
@@ -310,7 +330,7 @@ class BookingDownloadReceiptView(APIView):
                 'flight': flight,
                 'taxes': taxes,
                 'total_price': total_price,
-                'payment_method': 'Credit Card (Visa)'
+                'payment_method': f"{booking.payment_method} ({booking.payment_details})" if booking.payment_details else booking.payment_method
             })
             
         except Exception as e:
