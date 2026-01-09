@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile | SkyHigh</title>
+    <link id="favicon" rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='%23B91C1C'%3E%3Cpath%20d='M21%2016v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10%202.67%2010%203.5V9l-8%205v2l8-2.5V19l-2%201.5V22l3.5-1%203.5%201v-1.5L13%2019v-5.5l8%202.5z'/%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -13,6 +14,7 @@
     <link rel="stylesheet" href="/static/css/style.css?v=3">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/static/js/favicon.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -122,6 +124,10 @@
 
                 <div class="glass-panel p-4 rounded-3xl">
                     <nav class="space-y-1">
+                        <a href="/"
+                            class="flex items-center gap-4 px-6 py-4 text-gray-600 hover:bg-gray-50 hover:text-black rounded-xl font-bold transition-colors">
+                            <i class="fas fa-arrow-left w-6"></i> Back to Home
+                        </a>
                         <a href="#"
                             class="flex items-center gap-4 px-6 py-4 bg-red-50 text-primary rounded-xl font-bold transition-colors">
                             <i class="fas fa-chart-pie w-6"></i> Dashboard
