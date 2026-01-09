@@ -198,3 +198,18 @@ class CaptchaView(APIView):
             'captcha_id': captcha_id,
             'svg': svg
         })
+
+class UserDeleteView(APIView):
+    def delete(self, request):
+        email = request.data.get('email')
+        
+        if not email:
+            return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        users = get_users_collection()
+        result = users.delete_one({'email': email})
+        
+        if result.deleted_count == 0:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+            
+        return Response({'message': 'Account deleted successfully'}, status=status.HTTP_200_OK)
