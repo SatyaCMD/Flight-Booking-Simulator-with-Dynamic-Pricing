@@ -54,6 +54,8 @@ class Booking:
     booking_date: datetime
     passenger_details: List[dict] 
     flight_id: Optional[str] = None 
+    origin: Optional[str] = None
+    destination: Optional[str] = None
     travel_class: str = "Economy"
     status: str = "CONFIRMED"
     
