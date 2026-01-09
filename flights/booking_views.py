@@ -6,6 +6,11 @@ from .models import Booking
 from core.db import get_captchas_collection
 from datetime import datetime
 import uuid
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from io import BytesIO
 
 class BookingCreateView(APIView):
     def post(self, request):
@@ -35,22 +40,45 @@ class BookingCreateView(APIView):
         if not passenger_details or not isinstance(passenger_details, list) or len(passenger_details) == 0:
             return Response({'error': 'At least one passenger is required'}, status=status.HTTP_400_BAD_REQUEST)
 
-        import random
-        import string
+        flight_repo = FlightRepository()
+        flight = flight_repo.get_flight_by_id(flight_id)
 
-        transaction_id = "TXN" + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+        if not flight:
+            return Response({'error': 'Flight not found'}, status=status.HTTP_404_NOT_FOUND)
 
         for passenger in passenger_details:
-            preference = passenger.get('seat_preference', 'Any')
-            row = random.randint(1, 30)
-            if preference == 'Window':
-                col = random.choice(['A', 'F'])
-            elif preference == 'Aisle':
-                col = random.choice(['C', 'D'])
-            else:
-                col = random.choice(['B', 'E'])
+            seat_number = passenger.get('seat_number')
+            if not seat_number:
+                return Response({'error': 'Seat number is required for each passenger'}, status=status.HTTP_400_BAD_REQUEST)
+
+            row_num_str = ''.join(filter(str.isdigit, seat_number))
+            if not row_num_str:
+                return Response({'error': f'Invalid seat number: {seat_number}'}, status=status.HTTP_400_BAD_REQUEST)
+                
+            row_num = int(row_num_str)
+            col_char = ''.join(filter(str.isalpha, seat_number)).upper()
             
-            passenger['seat_number'] = f"{row}{col}"
+            if not col_char or row_num <= 0 or row_num > len(flight.seat_map):
+                return Response({'error': f'Invalid seat number: {seat_number}'}, status=status.HTTP_400_BAD_REQUEST)
+
+            col_index = ord(col_char) - ord('A')
+            aisle_offset = 0
+            for i in range(len(flight.seat_map[row_num - 1])):
+                if flight.seat_map[row_num - 1][i] == 'X' and i <= col_index:
+                    aisle_offset += 1
+            
+            actual_col_index = col_index + aisle_offset
+
+            if actual_col_index >= len(flight.seat_map[row_num - 1]) or flight.seat_map[row_num - 1][actual_col_index] != 'A':
+                return Response({'error': f'Seat {seat_number} is not available'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            row_list = list(flight.seat_map[row_num - 1])
+            row_list[actual_col_index] = 'U'
+            flight.seat_map[row_num - 1] = "".join(row_list)
+
+
+        transaction_id = "TXN" + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+        flight_repo.update_flight(flight)
 
         booking = Booking(
             booking_reference=str(uuid.uuid4())[:8].upper(),
@@ -99,16 +127,14 @@ class BookingListView(APIView):
                         'airline_code': flight.airline_code
                     }
             results.append(b_dict)
-            
         return Response(results)
 
 class BookingCheckinView(APIView):
     def post(self, request):
         pnr = request.data.get('pnr')
-        lastname = request.data.get('lastname')
 
-        if not pnr or not lastname:
-            return Response({'error': 'PNR and Last Name are required'}, status=status.HTTP_400_BAD_REQUEST)
+        if not pnr:
+            return Response({'error': 'PNR is required'}, status=status.HTTP_400_BAD_REQUEST)
 
         repo = BookingRepository()
         booking_doc = repo.collection.find_one({'booking_reference': pnr.upper()})
@@ -121,15 +147,6 @@ class BookingCheckinView(APIView):
             
         booking = Booking(**booking_doc)
         
-        passenger_found = False
-        for p in booking.passenger_details:
-            if lastname.lower() in p.get('name', '').lower():
-                passenger_found = True
-                break
-        
-        if not passenger_found:
-            return Response({'error': 'Passenger not found in this booking'}, status=status.HTTP_404_NOT_FOUND)
-
         return Response({
             'message': 'Booking found',
             'booking': booking.to_dict()
@@ -220,6 +237,11 @@ class UserStatsView(APIView):
             'next_trip': next_trip
         })
 
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from io import BytesIO
+
 class BookingDownloadReceiptView(APIView):
     def get(self, request, booking_id):
         try:
@@ -243,11 +265,20 @@ class BookingDownloadReceiptView(APIView):
             flight = None
             if booking.flight_id:
                 flight = flight_repo.get_flight_by_id(booking.flight_id)
-                
-            return render(request, 'receipt.html', {
-                'booking': booking, 
-                'flight': flight
-            })
+
+            template = get_template('receipt.html')
+            context = {'booking': booking, 'flight': flight}
+            html = template.render(context)
+            
+            result = BytesIO()
+            pdf = pisa.CreatePDF(BytesIO(html.encode("UTF-8")), result)
+            
+            if not pdf.err:
+                response = HttpResponse(result.getvalue(), content_type='application/pdf')
+                response['Content-Disposition'] = f'attachment; filename="receipt_{booking_id}.pdf"'
+                return response
+            
+            return Response({'error': 'Error generating PDF'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
         except Exception as e:
             print(f"Error generating receipt: {e}")
