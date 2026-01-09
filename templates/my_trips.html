@@ -180,12 +180,16 @@
 
                     if (filter === 'upcoming') {
                         filtered = allBookings.filter(b => {
-                            const date = b.flight_details ? new Date(b.flight_details.departure_time) : new Date(b.flight_date);
+                            const date = (b.flight_details && b.flight_details.departure_time)
+                                ? new Date(b.flight_details.departure_time)
+                                : new Date(b.booking_date);
                             return date >= new Date() && b.status !== 'Cancelled';
                         });
                     } else if (filter === 'completed') {
                         filtered = allBookings.filter(b => {
-                            const date = b.flight_details ? new Date(b.flight_details.departure_time) : new Date(b.flight_date);
+                            const date = (b.flight_details && b.flight_details.departure_time)
+                                ? new Date(b.flight_details.departure_time)
+                                : new Date(b.booking_date);
                             return date < new Date() && b.status !== 'Cancelled';
                         });
                     }
@@ -214,12 +218,29 @@
                 bookings.forEach(booking => {
                     const card = document.createElement('div');
                     const isCancelled = booking.status === 'Cancelled';
-                    const flightDate = booking.flight_details ? new Date(booking.flight_details.departure_time) : new Date(booking.flight_date);
+
+                    // Use flight departure time if available, otherwise fallback to booking date
+                    const flightDate = (booking.flight_details && booking.flight_details.departure_time)
+                        ? new Date(booking.flight_details.departure_time)
+                        : new Date(booking.booking_date);
+
                     const isCompleted = flightDate < new Date() && !isCancelled;
                     const statusClass = isCancelled ? 'cancelled' : (isCompleted ? 'completed' : 'upcoming');
 
-                    const origin = booking.flight_details ? booking.flight_details.origin : (booking.origin || '---');
-                    const destination = booking.flight_details ? booking.flight_details.destination : (booking.destination || '---');
+                    let origin = '---';
+                    let destination = '---';
+
+                    if (booking.flight_details && booking.flight_details.origin) {
+                        origin = booking.flight_details.origin;
+                    } else if (booking.origin) {
+                        origin = booking.origin;
+                    }
+
+                    if (booking.flight_details && booking.flight_details.destination) {
+                        destination = booking.flight_details.destination;
+                    } else if (booking.destination) {
+                        destination = booking.destination;
+                    }
 
                     card.className = `trip-card ${statusClass}`;
 
