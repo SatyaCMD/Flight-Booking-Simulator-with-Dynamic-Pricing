@@ -88,6 +88,8 @@ class BookingCreateView(APIView):
             booking_date=datetime.now(),
             passenger_details=passenger_details,
             flight_id=flight_id,
+            origin=flight.origin,
+            destination=flight.destination,
             travel_class=travel_class,
             status="CONFIRMED"
         )
@@ -118,14 +120,32 @@ class BookingListView(APIView):
             b_dict = booking.to_dict()
             if booking.flight_id:
                 flight = flight_repo.get_flight_by_id(booking.flight_id)
+                is_fallback = False
+                
+                if not flight and booking.flight_number:
+                    flight = flight_repo.get_flight_by_number(booking.flight_number)
+                    is_fallback = True
+                
                 if flight:
-                    b_dict['flight_details'] = {
+                    details = {
                         'origin': flight.origin,
                         'destination': flight.destination,
-                        'departure_time': flight.departure_time,
-                        'arrival_time': flight.arrival_time,
                         'airline_code': flight.airline_code
                     }
+                    if not is_fallback:
+                        details['departure_time'] = flight.departure_time
+                        details['arrival_time'] = flight.arrival_time
+                        
+                    b_dict['flight_details'] = details
+            
+            if 'flight_details' not in b_dict:
+                 b_dict['flight_details'] = {}
+
+            if 'origin' not in b_dict['flight_details'] and booking.origin:
+                b_dict['flight_details']['origin'] = booking.origin
+            
+            if 'destination' not in b_dict['flight_details'] and booking.destination:
+                b_dict['flight_details']['destination'] = booking.destination
             results.append(b_dict)
         return Response(results)
 
@@ -166,6 +186,9 @@ class BookingCancelView(APIView):
 
 from django.shortcuts import render
 
+from datetime import timedelta
+import random
+
 class BookingReceiptView(APIView):
     def get(self, request, booking_id):
         try:
@@ -189,11 +212,20 @@ class BookingReceiptView(APIView):
             flight = None
             if booking.flight_id:
                 flight = flight_repo.get_flight_by_id(booking.flight_id)
+                if not flight and booking.flight_number:
+                    flight = flight_repo.get_flight_by_number(booking.flight_number)
+            
+            gate = "A12" 
+            boarding_time = None
+            if flight and flight.departure_time:
+                boarding_time = flight.departure_time - timedelta(minutes=45)
                 
             return render(request, 'ticket.html', {
                 'booking': booking, 
                 'flight': flight,
-                'pnr': booking.booking_reference
+                'pnr': booking.booking_reference,
+                'gate': gate,
+                'boarding_time': boarding_time
             })
             
         except Exception as e:
@@ -265,20 +297,21 @@ class BookingDownloadReceiptView(APIView):
             flight = None
             if booking.flight_id:
                 flight = flight_repo.get_flight_by_id(booking.flight_id)
+                if not flight and booking.flight_number:
+                    flight = flight_repo.get_flight_by_number(booking.flight_number)
 
-            template = get_template('receipt.html')
-            context = {'booking': booking, 'flight': flight}
-            html = template.render(context)
-            
-            result = BytesIO()
-            pdf = pisa.CreatePDF(BytesIO(html.encode("UTF-8")), result)
-            
-            if not pdf.err:
-                response = HttpResponse(result.getvalue(), content_type='application/pdf')
-                response['Content-Disposition'] = f'attachment; filename="receipt_{booking_id}.pdf"'
-                return response
-            
-            return Response({'error': 'Error generating PDF'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            taxes = 45.00
+            base_price = flight.base_price if flight else 0
+            num_passengers = len(booking.passenger_details) if booking.passenger_details else 1
+            total_price = (base_price * num_passengers) + taxes
+
+            return render(request, 'receipt.html', {
+                'booking': booking, 
+                'flight': flight,
+                'taxes': taxes,
+                'total_price': total_price,
+                'payment_method': 'Credit Card (Visa)'
+            })
             
         except Exception as e:
             print(f"Error generating receipt: {e}")
