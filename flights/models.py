@@ -32,6 +32,7 @@ class Flight:
     base_price: float
     total_seats: int
     available_seats: int
+    seat_map: List[str]
     status: str = "SCHEDULED" 
     
     current_price: Optional[float] = None
