@@ -86,6 +86,12 @@ class FlightRepository:
             return Flight(**doc)
         return None
 
+    def get_flight_by_number(self, flight_number: str) -> Optional[Flight]:
+        doc = self.collection.find_one({'flight_number': flight_number}, {'_id': 0}, sort=[('departure_time', -1)])
+        if doc:
+            return Flight(**doc)
+        return None
+
     def delete_all(self):
         self.collection.delete_many({})
 
