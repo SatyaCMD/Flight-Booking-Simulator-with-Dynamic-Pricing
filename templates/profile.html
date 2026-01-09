@@ -227,7 +227,7 @@
             <form class="space-y-4">
                 <div>
                     <label class="block text-black font-bold mb-2 text-sm">Display Name</label>
-                    <input type="text" value="John Doe"
+                    <input type="text" id="settings-name"
                         class="w-full p-3 border rounded-xl bg-gray-50 focus:border-primary focus:outline-none font-medium">
                 </div>
                 <div>
@@ -243,7 +243,18 @@
                         </label>
                     </div>
                 </div>
-                <button type="button" onclick="closeSettings()"
+                <div>
+                    <label class="block text-black font-bold mb-2 text-sm">Change Password</label>
+                    <input type="password" id="new-password" placeholder="Leave blank to keep current"
+                        class="w-full p-3 border rounded-xl bg-gray-50 focus:border-primary focus:outline-none font-medium">
+                </div>
+                <div class="pt-4 border-t border-gray-100">
+                    <button type="button" onclick="confirmDeleteAccount()"
+                        class="w-full py-3 text-red-600 font-bold hover:bg-red-50 rounded-xl transition-colors">
+                        <i class="fas fa-trash-alt mr-2"></i> Delete Account
+                    </button>
+                </div>
+                <button type="button" onclick="saveSettings()"
                     class="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-red-700 transition-colors mt-4">Save
                     Changes</button>
             </form>
@@ -264,6 +275,25 @@
                     class="flex-1 py-3 rounded-xl border-2 border-gray-200 font-bold text-gray-600 hover:bg-gray-50 transition-colors">Cancel</button>
                 <button onclick="performLogout()"
                     class="flex-1 py-3 rounded-xl bg-primary text-white font-bold hover:bg-red-700 transition-colors shadow-lg">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="delete-account-modal"
+        class="hidden fixed inset-0 bg-black/80 z-[70] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="glass-panel w-full max-w-sm p-8 rounded-3xl text-center">
+            <div
+                class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6 text-red-600 text-2xl">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="font-serif text-2xl font-bold text-black mb-2">Delete Account?</h3>
+            <p class="text-gray-500 font-medium mb-8">This action cannot be undone. All your data will be permanently
+                removed.</p>
+            <div class="flex gap-4">
+                <button onclick="closeDeleteAccount()"
+                    class="flex-1 py-3 rounded-xl border-2 border-gray-200 font-bold text-gray-600 hover:bg-gray-50 transition-colors">Cancel</button>
+                <button onclick="performDeleteAccount()"
+                    class="flex-1 py-3 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700 transition-colors shadow-lg">Delete</button>
             </div>
         </div>
     </div>
@@ -323,6 +353,86 @@
         function closeLogout() {
             document.getElementById('logout-modal').classList.add('hidden');
         }
+        async function saveSettings() {
+            const userStr = localStorage.getItem('user');
+            if (!userStr) return;
+
+            const user = JSON.parse(userStr);
+            const newName = document.getElementById('settings-name').value;
+            const newPassword = document.getElementById('new-password').value;
+
+            const payload = {
+                email: user.email,
+                name: newName
+            };
+
+            if (newPassword) {
+                payload.password = newPassword;
+            }
+
+            try {
+                const res = await fetch('/auth/update-profile/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    document.getElementById('profile-name').textContent = data.user.name;
+                    closeSettings();
+                    alert('Profile updated successfully');
+                } else {
+                    alert(data.error || 'Failed to update profile');
+                }
+            } catch (e) {
+                console.error('Error updating profile:', e);
+                alert('An error occurred while updating profile');
+            }
+        }
+
+        function confirmDeleteAccount() {
+            document.getElementById('settings-modal').classList.add('hidden');
+            document.getElementById('delete-account-modal').classList.remove('hidden');
+        }
+
+        function closeDeleteAccount() {
+            document.getElementById('delete-account-modal').classList.add('hidden');
+            document.getElementById('settings-modal').classList.remove('hidden');
+        }
+
+        async function performDeleteAccount() {
+            const userStr = localStorage.getItem('user');
+            if (!userStr) return;
+
+            const user = JSON.parse(userStr);
+
+            try {
+                const res = await fetch('/auth/delete-account/', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: user.email })
+                });
+
+                if (res.ok) {
+                    localStorage.removeItem('user');
+                    window.location.href = '/login/';
+                } else {
+                    const data = await res.json();
+                    alert(data.error || 'Failed to delete account');
+                }
+            } catch (e) {
+                console.error('Error deleting account:', e);
+                alert('An error occurred while deleting account');
+            }
+        }
+
         function performLogout() {
             localStorage.removeItem('user');
             window.location.href = '/login/';
