@@ -172,6 +172,13 @@
             border: 1px solid #e2e8f0;
             padding: 0.25rem;
             border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .print-btn {
@@ -275,18 +282,22 @@
                 <tbody>
                     <tr>
                         <td>
-                            Flight Ticket ({{ booking.flight_number }})
-                            <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">
+                            <div style="font-weight: 600; color: var(--dark);">
+                                Flight Ticket ({{ booking.flight_number }})
+                            </div>
+                            <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">
                                 {{ booking.travel_class }} Class • {{ flight.origin }} to {{ flight.destination }}
                             </div>
                         </td>
-                        <td>{{ booking.passenger_details|length }}</td>
-                        <td style="text-align: right;">${{ flight.base_price }}</td>
+                        <td style="color: #64748b;">{{ booking.passenger_details|length }}</td>
+                        <td style="text-align: right; font-weight: 600;">${{ flight.base_price }}</td>
                     </tr>
                     <tr>
-                        <td>Taxes & Fees</td>
-                        <td>-</td>
-                        <td style="text-align: right;">$45.00</td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--dark);">Taxes & Fees</div>
+                        </td>
+                        <td style="color: #64748b;">-</td>
+                        <td style="text-align: right; font-weight: 600;">${{ taxes }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -295,22 +306,24 @@
         <div class="total-section">
             <div class="total-box">
                 <div class="total-label">Total Amount Paid</div>
-                <div class="total-amount">$1,245.00</div>
+                <div class="total-amount">${{ total_price }}</div>
             </div>
         </div>
 
         <div class="footer">
             <div class="qr-section">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TXN:{{ booking.transaction_id }}|PNR:{{ booking.booking_reference }}|PAX:{{ booking.passenger_details.0.name }}"
-                    class="qr-code" alt="Verification QR">
+                <div class="qr-code">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TXN:{{ booking.transaction_id }}%0APNR:{{ booking.booking_reference }}%0AFlight:{{ booking.flight_number }}%0ADate:{{ booking.booking_date|date:'Y-m-d' }}%0APassenger:{{ booking.passenger_details.0.name }}"
+                        alt="QR Code">
+                </div>
                 <div style="font-size: 0.8rem; color: #64748b;">
-                    <strong>Scan to Verify</strong><br>
+                    <strong style="color: var(--dark);">Scan to Verify</strong><br>
                     Transaction Authenticity
                 </div>
             </div>
-            <div style="text-align: right; font-size: 0.9rem; color: #94a3b8;">
-                <p>Thank you for flying with SkyHigh.</p>
-                <p>For support: help@skyhigh.com</p>
+            <div style="text-align: right; font-size: 0.85rem; color: #94a3b8;">
+                <p style="margin: 0 0 0.25rem;">Thank you for flying with SkyHigh.</p>
+                <p style="margin: 0;">For support: help@skyhigh.com</p>
             </div>
         </div>
     </div>
