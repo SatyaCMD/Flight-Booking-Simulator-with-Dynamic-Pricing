@@ -73,87 +73,82 @@
         .seat {
             width: 40px;
             height: 40px;
-            border: 2px solid #B91C1C;
+            margin: 4px;
             border-radius: 8px;
+            background-color: #e2e8f0;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
             transition: all 0.2s;
-            background-color: #FEF2F2;
-            color: #B91C1C;
+            position: relative;
         }
 
-        .seat:hover {
-            background-color: #B91C1C;
-            color: white;
+        .seat:hover:not(.occupied):not(.disabled) {
+            background-color: #cbd5e1;
+            transform: scale(1.1);
         }
 
         .seat.occupied {
-            background-color: #9ca3af;
-            border-color: #6b7280;
-            color: white;
+            background-color: #fee2e2;
+            color: #ef4444;
             cursor: not-allowed;
+            opacity: 0.7;
         }
 
-        .seat.first-class {
-            background-color: #FBBF24;
-            border-color: #F59E0B;
-            color: #78350F;
-        }
-
-        .seat.business-class {
-            background-color: #60A5FA;
-            border-color: #3B82F6;
-            color: #1E40AF;
+        .seat.occupied::after {
+            content: '\f023';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            font-size: 14px;
         }
 
         .seat.selected {
-            background-color: #10B981;
-            border-color: #059669;
+            background-color: #B91C1C;
             color: white;
-            animation: pop-in 0.3s ease-out;
+            transform: scale(1.1);
+            box-shadow: 0 4px 6px -1px rgba(185, 28, 28, 0.3);
+            animation: pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .seat.disabled {
-            background-color: #E5E7EB;
-            border-color: #D1D5DB;
-            color: #9CA3AF;
+            opacity: 0.3;
             cursor: not-allowed;
+            background-color: #f1f5f9;
         }
 
         .seat-row {
             display: flex;
-            gap: 10px;
             justify-content: center;
+            gap: 4px;
         }
 
         .aisle {
-            width: 40px;
+            width: 20px;
         }
 
         @keyframes pop-in {
             0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.1);
+                transform: scale(0.8);
             }
 
             100% {
-                transform: scale(1);
+                transform: scale(1.1);
             }
         }
     </style>
 </head>
 
 <body class="font-sans text-gray-800 antialiased">
-    <nav class="bg-white shadow-md fixed w-full z-50 transition-all duration-300">
+    <nav class="glass-panel fixed w-full z-50 transition-all duration-300" id="navbar">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-2 text-2xl font-serif font-bold text-primary">
-                <i class="fas fa-plane-departure"></i> SkyHigh
+                <i class="fas fa-plane-departure"></i>
+                SkyHigh
             </div>
             <div class="hidden md:flex items-center gap-8 font-medium text-gray-600">
                 <a href="/" class="hover:text-primary transition-colors">Book Flight</a>
@@ -167,8 +162,10 @@
     </nav>
 
     <main class="container mx-auto px-4 pt-28 pb-16 max-w-7xl">
-        <a href="/" class="mb-4 inline-block text-primary hover:text-red-700 transition-colors font-bold text-lg"><i
-                class="fas fa-arrow-left mr-2"></i> Back to Home</a>
+        <a href="/" class="mb-4 inline-block text-primary hover:text-red-700 transition-colors font-bold text-lg">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Home
+        </a>
+
         <div class="flex items-center justify-center mb-12 max-w-4xl mx-auto">
             <div class="flex items-center gap-3 text-primary font-bold">
                 <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center border-2 border-primary">
@@ -207,9 +204,45 @@
                 <form id="booking-form" class="space-y-8">
                     <div id="flight-options-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
                         <h2 class="font-serif text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                            <i class="fas fa-sliders-h text-secondary"></i> Flight Options
+                            <i class="fas fa-sliders-h text-secondary"></i>Flight Options
                         </h2>
-                        <div class="form-group">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="form-group">
+                                <label class="block text-gray-700 font-medium mb-3 text-lg">Trip Type</label>
+                                <div class="flex gap-4">
+                                    <label class="cursor-pointer relative group flex-1">
+                                        <input type="radio" name="trip_type" value="one_way" checked
+                                            class="peer absolute opacity-0">
+                                        <div
+                                            class="p-4 rounded-xl border-2 border-gray-200 peer-checked:border-primary peer-checked:bg-red-50 transition-all flex flex-col items-center justify-center gap-2 h-full group-hover:border-gray-300">
+                                            <i
+                                                class="fas fa-arrow-right text-xl text-gray-400 peer-checked:text-primary"></i>
+                                            <span
+                                                class="text-sm font-medium text-gray-600 peer-checked:text-primary">One
+                                                Way</span>
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer relative group flex-1">
+                                        <input type="radio" name="trip_type" value="round_trip"
+                                            class="peer absolute opacity-0">
+                                        <div
+                                            class="p-4 rounded-xl border-2 border-gray-200 peer-checked:border-primary peer-checked:bg-red-50 transition-all flex flex-col items-center justify-center gap-2 h-full group-hover:border-gray-300">
+                                            <i
+                                                class="fas fa-exchange-alt text-xl text-gray-400 peer-checked:text-primary"></i>
+                                            <span
+                                                class="text-sm font-medium text-gray-600 peer-checked:text-primary">Round
+                                                Trip</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group hidden" id="return-date-container">
+                                <label class="block text-gray-700 font-medium mb-3 text-lg">Return Date</label>
+                                <input type="date" id="return-date" name="return_date"
+                                    class="w-full p-4 text-lg bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-colors">
+                            </div>
+                        </div>
+                        <div class="form-group mt-6">
                             <label class="block text-gray-700 font-medium mb-3 text-lg">Travel Class</label>
                             <div class="relative">
                                 <select id="travel-class" name="travel_class"
@@ -228,16 +261,13 @@
 
                     <div id="passengers-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
                         <h2 class="font-serif text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                            <i class="fas fa-users text-secondary"></i> Passenger Details
+                            <i class="fas fa-users text-secondary"></i>Passenger Details
                         </h2>
-                        <div id="passengers-container" class="space-y-6">
-                        </div>
-
+                        <div id="passengers-container" class="space-y-6"></div>
                         <button type="button" id="add-passenger-btn"
                             class="w-full mt-6 py-4 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 font-medium hover:border-primary hover:text-primary hover:bg-red-50 transition-all flex items-center justify-center gap-2 group">
-                            <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> Add Another Passenger
+                            <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i>Add Another Passenger
                         </button>
-
                         <button type="button" id="confirm-passengers-btn"
                             class="w-full mt-4 bg-primary hover:bg-red-700 text-white font-bold py-4 px-6 rounded-xl text-lg shadow-lg transform transition hover:-translate-y-0.5">
                             Confirm Passengers & Select Seats
@@ -247,7 +277,7 @@
                     <div id="seat-selection-section"
                         class="hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
                         <h2 class="font-serif text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                            <i class="fas fa-couch text-secondary"></i> Select Your Seats
+                            <i class="fas fa-couch text-secondary"></i>Select Your Seats
                         </h2>
                         <div id="seat-map-container" class="w-full mx-auto"></div>
                         <button type="button" id="confirm-seats-btn"
@@ -258,9 +288,8 @@
 
                     <div id="payment-section" class="hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
                         <h2 class="font-serif text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                            <i class="fas fa-wallet text-secondary"></i> Payment
+                            <i class="fas fa-wallet text-secondary"></i>Payment
                         </h2>
-
                         <div class="mb-8">
                             <label class="block text-gray-700 font-medium mb-4 text-lg">Select Payment Method</label>
                             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -325,7 +354,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div id="upi-details" class="payment-section hidden space-y-6">
                                 <div class="form-group">
                                     <label class="block text-gray-700 font-medium mb-2 text-lg">UPI ID</label>
@@ -334,7 +362,6 @@
                                     <p class="text-sm text-gray-500 mt-2">Verify your UPI ID on your mobile app.</p>
                                 </div>
                             </div>
-
                             <div id="netbanking-details" class="payment-section hidden space-y-6">
                                 <div class="form-group">
                                     <label class="block text-gray-700 font-medium mb-2 text-lg">Select Bank</label>
@@ -384,14 +411,12 @@
                 <div class="summary-card bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sticky top-28">
                     <h3 class="font-serif text-xl font-bold text-gray-900 mb-6 pb-4 border-b border-gray-100">Trip
                         Summary</h3>
-
                     <div id="flight-loading" class="text-center py-8 text-gray-500">
                         <div
                             class="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3">
                         </div>
                         Loading flight details...
                     </div>
-
                     <div id="flight-details" class="hidden space-y-6">
                         <div class="flex justify-between items-start">
                             <div>
@@ -405,7 +430,6 @@
                                     id="seats-available">-- Seats</div>
                             </div>
                         </div>
-
                         <div class="grid grid-cols-2 gap-4">
                             <div class="bg-gray-50 p-3 rounded-lg">
                                 <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Date</div>
@@ -419,15 +443,13 @@
 
                         <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-100">
                             <div class="font-bold text-secondary mb-3 flex items-center gap-2">
-                                <i class="fas fa-crown"></i> Membership Rewards
+                                <i class="fas fa-crown"></i>Membership Rewards
                             </div>
                             <div class="flex gap-2">
                                 <input type="text" id="membership-input" placeholder="Enter Member ID"
                                     class="flex-1 p-2 text-sm border border-yellow-200 rounded-lg focus:border-secondary focus:outline-none">
                                 <button type="button" id="redeem-btn"
-                                    class="bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-yellow-700 transition-colors">
-                                    Apply
-                                </button>
+                                    class="bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-yellow-700 transition-colors">Apply</button>
                             </div>
                             <div id="discount-msg" class="mt-2 text-xs font-bold hidden"></div>
                         </div>
@@ -457,6 +479,23 @@
         </div>
     </main>
 
+    <div id="notification-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="closeNotification()"></div>
+        <div
+            class="relative bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden transform transition-all modal-animate">
+            <div class="p-6 text-center">
+                <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-info-circle text-3xl text-blue-500"></i>
+                </div>
+                <h3 id="notification-title" class="text-xl font-bold text-gray-900 mb-2">Notification</h3>
+                <p id="notification-message" class="text-gray-600 mb-6">Message goes here</p>
+                <button onclick="closeNotification()"
+                    class="w-full bg-gray-900 text-white font-bold py-3 rounded-xl hover:bg-black transition-colors">Okay,
+                    Got it</button>
+            </div>
+        </div>
+    </div>
+
     <div id="success-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-gray-900/80 backdrop-blur-sm"></div>
         <div
@@ -470,7 +509,6 @@
                 <h2 class="font-serif text-3xl font-bold text-gray-900 mb-2">Booking Confirmed</h2>
                 <p class="text-gray-500">Your flight has been successfully booked.</p>
             </div>
-
             <div class="p-8">
                 <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 mb-6 space-y-4">
                     <div class="flex justify-between items-center pb-4 border-b border-dashed border-gray-200">
@@ -483,11 +521,9 @@
                             class="text-sm font-mono text-gray-600 bg-white px-2 py-1 rounded border border-gray-200"></span>
                     </div>
                 </div>
-
                 <button id="modal-close-btn"
-                    class="w-full bg-primary hover:bg-red-700 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all">
-                    View My Trips
-                </button>
+                    class="w-full bg-primary hover:bg-red-700 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all">View
+                    My Trips</button>
             </div>
         </div>
     </div>
@@ -500,17 +536,22 @@
 
             console.log("Booking Flight ID:", flightId);
             const userStr = localStorage.getItem('user');
+
             if (!userStr) {
                 window.location.href = '/login/';
                 return;
             }
+
             const user = JSON.parse(userStr);
 
             let basePrice = 0;
             const taxRate = 0.10;
             let flightDetails = null;
             let seatMapData = null;
+
             let passengerSeatAssignments = {};
+            let passengerReturnSeatAssignments = {};
+            let isSelectingReturnSeats = false;
 
             const passengersContainer = document.getElementById('passengers-container');
             const addPassengerBtn = document.getElementById('add-passenger-btn');
@@ -523,11 +564,13 @@
             const paymentSection = document.getElementById('payment-section');
 
             addPassengerForm();
+
             async function loadCaptcha() {
                 try {
                     const res = await fetch('/api/flights/auth/captcha/');
                     const data = await res.json();
                     const container = document.getElementById('captcha-container');
+
                     if (container) {
                         container.innerHTML = data.svg;
                         document.getElementById('booking-captcha-id').value = data.captcha_id;
@@ -550,6 +593,7 @@
                     const errText = await flightResponse.text();
                     throw new Error(`Failed to fetch flight details: ${flightResponse.status} ${errText}`);
                 }
+
                 flightDetails = await flightResponse.json();
 
                 if (seatMapResponse.ok) {
@@ -564,8 +608,12 @@
                 document.getElementById('summary-route').textContent = `${flightDetails.origin} → ${flightDetails.destination}`;
 
                 const date = new Date(flightDetails.departure_time);
+
                 document.getElementById('summary-date').textContent = date.toLocaleDateString('en-US', {
-                    weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
                 });
 
                 document.getElementById('summary-airline').textContent = `${flightDetails.airline_code} • ${flightDetails.flight_number}`;
@@ -575,7 +623,8 @@
 
             } catch (err) {
                 console.error(err);
-                document.getElementById('flight-loading').innerHTML = `<div class="text-red-500"><i class="fas fa-exclamation-circle text-3xl mb-2"></i><br> Could not load flight details.<br> <span class="text-sm opacity-75">${err.message}</span></div>`;
+
+                document.getElementById('flight-loading').innerHTML = `<div class="text-red-500" ><i class="fas fa-exclamation-circle text-3xl mb-2" ></i><br> Could not load flight details.<br> <span class="text-sm opacity-75" >${err.message}</span></div>`;
             }
 
             addPassengerBtn.addEventListener('click', () => {
@@ -588,31 +637,70 @@
                 seatSelectionSection.classList.remove('hidden');
                 document.querySelector('[data-step="passengers"]').classList.remove('step-active');
                 document.querySelector('[data-step="seats"]').classList.add('step-active');
-
-                await renderSeatMap();
+                renderSeatMap();
             });
 
             confirmSeatsBtn.addEventListener('click', () => {
                 const totalPassengers = passengersContainer.children.length;
-                const selectedSeatsCount = Object.keys(passengerSeatAssignments).length;
+                const isRoundTrip = document.querySelector('input[name="trip_type"]:checked').value === 'round_trip';
 
-                if (selectedSeatsCount < totalPassengers) {
-                    alert('Please select a seat for each passenger.');
-                    return;
+                if (!isSelectingReturnSeats) {
+                    if (Object.keys(passengerSeatAssignments).length < totalPassengers) {
+                        showNotification('Selection Incomplete', 'Please select an outbound seat for each passenger.');
+                        return;
+                    }
+
+                    if (isRoundTrip) {
+                        isSelectingReturnSeats = true;
+                        showNotification('Outbound Confirmed', 'Outbound seats confirmed. Now please select your RETURN seats.');
+                        document.querySelectorAll('.seat.selected').forEach(el => el.classList.remove('selected'));
+                        renderSeatMap();
+                        return;
+                    }
+                } else {
+                    if (Object.keys(passengerReturnSeatAssignments).length < totalPassengers) {
+                        showNotification('Selection Incomplete', 'Please select a return seat for each passenger.');
+                        return;
+                    }
                 }
+
+                document.querySelector('[data-step="seats"]').classList.remove('step-active');
+                document.querySelector('[data-step="payment"]').classList.add('step-active');
 
                 seatSelectionSection.classList.add('hidden');
                 paymentSection.classList.remove('hidden');
-                document.querySelector('[data-step="seats"]').classList.remove('step-active');
-                document.querySelector('[data-step="payment"]').classList.add('step-active');
             });
 
             const travelClassSelect = document.getElementById('travel-class');
+            const tripTypeInputs = document.querySelectorAll('input[name="trip_type"]');
+            const returnDateContainer = document.getElementById('return-date-container');
+            const returnDateInput = document.getElementById('return-date');
+
             travelClassSelect.addEventListener('change', () => {
                 updatePrice();
+
                 if (!seatSelectionSection.classList.contains('hidden')) {
                     renderSeatMap();
                 }
+            });
+
+            tripTypeInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    const returnInputs = document.querySelectorAll('.return-seat-input');
+
+                    if (input.value === 'round_trip') {
+                        returnDateContainer.classList.remove('hidden');
+                        returnDateInput.setAttribute('required', 'required');
+                        returnInputs.forEach(el => el.classList.remove('hidden'));
+                    } else {
+                        returnDateContainer.classList.add('hidden');
+                        returnDateInput.removeAttribute('required');
+                        returnDateInput.value = '';
+                        returnInputs.forEach(el => el.classList.add('hidden'));
+                    }
+
+                    updatePrice();
+                });
             });
 
             function addPassengerForm() {
@@ -632,28 +720,26 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="form-group md:col-span-2">
                             <label class="block text-gray-700 font-medium mb-2">Full Name</label>
-                            <input type="text" name="name_${count}" required placeholder="e.g. John Doe"
-                                class="w-full p-4 text-lg bg-white border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-colors">
+                            <input type="text" name="name_${count}" required placeholder="e.g. John Doe" class="w-full p-4 text-lg bg-white border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-colors">
                         </div>
                         <div class="form-group">
                             <label class="block text-gray-700 font-medium mb-2">Age</label>
-                            <input type="number" name="age_${count}" required min="1" max="120"
-                                class="w-full p-4 text-lg bg-white border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-colors">
+                            <input type="number" name="age_${count}" required min="1" max="120" class="w-full p-4 text-lg bg-white border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-colors">
                         </div>
                         <div class="form-group">
                             <label class="block text-gray-700 font-medium mb-2">Phone</label>
-                            <input type="tel" name="phone_${count}" required placeholder="+1 234 567 890"
-                                class="w-full p-4 text-lg bg-white border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-colors">
+                            <input type="tel" name="phone_${count}" required placeholder="+1 234 567 890" class="w-full p-4 text-lg bg-white border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-colors">
                         </div>
                         <div class="form-group md:col-span-2">
                             <label class="block text-gray-700 font-medium mb-2">Email</label>
-                            <input type="email" name="email_${count}" required placeholder="john@example.com"
-                                class="w-full p-4 text-lg bg-white border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-colors">
+                            <input type="email" name="email_${count}" required placeholder="john@example.com" class="w-full p-4 text-lg bg-white border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-colors">
                         </div>
-                         <div class="form-group">
+                        <div class="form-group">
                             <label class="block text-gray-700 font-medium mb-2">Assigned Seat</label>
-                            <input type="text" name="seat_number_${count}" readonly
-                                class="w-full p-4 text-lg bg-gray-200 border-2 border-gray-300 rounded-xl focus:outline-none transition-colors text-center font-mono">
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="text" name="seat_number_${count}" readonly placeholder="Outbound" class="w-full p-4 text-lg bg-gray-200 border-2 border-gray-300 rounded-xl focus:outline-none transition-colors text-center font-mono">
+                                <input type="text" name="return_seat_number_${count}" readonly placeholder="Return" class="w-full p-4 text-lg bg-gray-200 border-2 border-gray-300 rounded-xl focus:outline-none transition-colors text-center font-mono hidden return-seat-input">
+                            </div>
                         </div>
                     </div>`;
 
@@ -669,99 +755,12 @@
                 }
             }
 
-            async function renderSeatMap() {
-                const seatMapContainer = document.getElementById('seat-map-container');
-                seatMapContainer.innerHTML = '<div class="text-center py-8">Loading seat map...</div>';
-                const selectedTravelClass = travelClassSelect.value;
-
-                try {
-                    const response = await fetch(`/api/flights/${flightId}/seatmap/`);
-                    seatMapData = await response.json();
-
-                    let html = '';
-                    seatMapData.seat_map.forEach((row, rowIndex) => {
-                        html += '<div class="seat-row mb-2">';
-                        row.forEach((seat, colIndex) => {
-                            let seatClass = 'seat';
-                            if (seat.is_occupied) {
-                                seatClass += ' occupied';
-                            } else {
-                                const seatClassLower = seat.seat_class.toLowerCase();
-                                const selectedTravelClassLower = selectedTravelClass.toLowerCase();
-
-                                if (seatClassLower === 'first') {
-                                    seatClass += ' first-class';
-                                } else if (seatClassLower === 'business') {
-                                    seatClass += ' business-class';
-                                }
-                                if (seatClassLower !== selectedTravelClassLower) {
-                                    seatClass += ' disabled';
-                                }
-                            }
-
-                            html += `<div class="${seatClass}" data-seat-number="${seat.seat_number}" data-seat-class="${seat.seat_class}">${seat.seat_number}</div>`;
-                            if (colIndex === seatMapData.layout.columns_per_side - 1) {
-                                html += '<div class="aisle"></div>';
-                            }
-                        });
-                        html += '</div>';
-                    });
-
-                    seatMapContainer.innerHTML = html;
-
-                    seatMapContainer.querySelectorAll('.seat').forEach(seatEl => {
-                        seatEl.addEventListener('click', handleSeatSelection);
-                    });
-
-                } catch (error) {
-                    seatMapContainer.innerHTML = '<div class="text-center py-8 text-red-500">Could not load seat map.</div>';
-                    console.error('Failed to render seat map:', error);
-                }
-            }
-
-            function handleSeatSelection(event) {
-                const seatEl = event.target;
-                const seatNumber = seatEl.dataset.seatNumber;
-
-                if (seatEl.classList.contains('occupied') || seatEl.classList.contains('disabled')) return;
-
-                const totalPassengers = passengersContainer.children.length;
-                const selectedSeats = document.querySelectorAll('.seat.selected');
-
-                if (seatEl.classList.contains('selected')) {
-                    seatEl.classList.remove('selected');
-                    for (const passengerId in passengerSeatAssignments) {
-                        if (passengerSeatAssignments[passengerId] === seatNumber) {
-                            delete passengerSeatAssignments[passengerId];
-                            document.querySelector(`input[name="seat_number_${passengerId}"]`).value = '';
-                            break;
-                        }
-                    }
-                } else {
-                    if (selectedSeats.length >= totalPassengers) {
-                        alert(`All passengers already have seats. To change a selection, please click on a selected seat to deselect it first.`);
-                        return;
-                    }
-
-                    seatEl.classList.add('selected');
-                    let assigned = false;
-                    for (let i = 1; i <= totalPassengers; i++) {
-                        if (!passengerSeatAssignments[i]) {
-                            passengerSeatAssignments[i] = seatNumber;
-                            document.querySelector(`input[name="seat_number_${i}"]`).value = seatNumber;
-                            assigned = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-
             function updatePassengerNumbers() {
                 Array.from(passengersContainer.children).forEach((div, index) => {
                     const count = index + 1;
                     div.dataset.passengerId = count;
                     div.querySelector('h4').innerHTML = `<div class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs">${count}</div> Passenger ${count}`;
+
                     div.querySelectorAll('input, select').forEach(input => {
                         const name = input.name.split('_')[0];
                         input.name = `${name}_${count}`;
@@ -831,6 +830,11 @@
                     multiplier = 2.5;
                 }
 
+                const isRoundTrip = document.querySelector('input[name="trip_type"]:checked').value === 'round_trip';
+                if (isRoundTrip) {
+                    multiplier *= 2;
+                }
+
                 const seatsEl = document.getElementById('seats-available');
                 if (seatsEl) {
                     seatsEl.textContent = `${seatsDisplay} Seats`;
@@ -863,16 +867,141 @@
                 }
             }
 
-            const form = document.getElementById('booking-form');
+            function showNotification(title, message) {
+                let modal = document.getElementById('notification-modal');
+                if (!modal) {
+                    alert(`${title}: ${message}`);
+                    return;
+                }
+                document.getElementById('notification-title').textContent = title;
+                document.getElementById('notification-message').textContent = message;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
 
+            window.closeNotification = function () {
+                const modal = document.getElementById('notification-modal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }
+            }
+
+            function showSuccessModal(bookingId) {
+                const modal = document.getElementById('success-modal');
+                if (modal) {
+                    const refEl = document.getElementById('modal-pnr');
+                    if (refEl) refEl.textContent = bookingId;
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+
+                    if (typeof confetti === 'function') {
+                        confetti({
+                            particleCount: 100,
+                            spread: 70,
+                            origin: { y: 0.6 }
+                        });
+                    }
+                }
+            }
+
+            function renderSeatMap() {
+                const container = document.getElementById('seat-map-container');
+                if (!container) return;
+                container.innerHTML = '';
+
+                if (!seatMapData || !seatMapData.seat_map) return;
+
+                const rows = seatMapData.seat_map;
+                const selectedTravelClass = document.getElementById('travel-class').value;
+                const selectedTravelClassLower = selectedTravelClass.toLowerCase();
+
+                rows.forEach(row => {
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = 'seat-row mb-2';
+
+                    row.forEach((seat, index) => {
+                        if (index === 3) {
+                            const aisle = document.createElement('div');
+                            aisle.className = 'aisle';
+                            rowDiv.appendChild(aisle);
+                        }
+
+                        const seatDiv = document.createElement('div');
+                        let seatClass = 'seat';
+
+                        if (seat.is_occupied) {
+                            seatClass += ' occupied';
+                        } else if (seat.seat_class.toLowerCase() !== selectedTravelClassLower) {
+                            seatClass += ' disabled';
+                        } else {
+                            const currentAssignments = isSelectingReturnSeats ? passengerReturnSeatAssignments : passengerSeatAssignments;
+                            if (Object.values(currentAssignments).includes(seat.seat_number)) {
+                                seatClass += ' selected';
+                            }
+                        }
+
+                        seatDiv.className = seatClass;
+                        seatDiv.textContent = seat.seat_number;
+                        seatDiv.dataset.seatNumber = seat.seat_number;
+                        seatDiv.dataset.seatClass = seat.seat_class;
+                        seatDiv.addEventListener('click', handleSeatSelection);
+                        rowDiv.appendChild(seatDiv);
+                    });
+
+                    container.appendChild(rowDiv);
+                });
+            }
+
+            function handleSeatSelection(event) {
+                const seatEl = event.target;
+                const seatNumber = seatEl.dataset.seatNumber;
+                const seatClass = seatEl.dataset.seatClass;
+                const selectedTravelClass = document.getElementById('travel-class').value.toLowerCase();
+
+                if (seatEl.classList.contains('occupied') || seatEl.classList.contains('disabled')) return;
+                if (seatClass.toLowerCase() !== selectedTravelClass) return;
+
+                const totalPassengers = passengersContainer.children.length;
+                const currentAssignments = isSelectingReturnSeats ? passengerReturnSeatAssignments : passengerSeatAssignments;
+                const inputNamePrefix = isSelectingReturnSeats ? 'return_seat_number_' : 'seat_number_';
+
+                if (seatEl.classList.contains('selected')) {
+                    seatEl.classList.remove('selected');
+                    for (const [passengerId, assignedSeat] of Object.entries(currentAssignments)) {
+                        if (assignedSeat === seatNumber) {
+                            delete currentAssignments[passengerId];
+                            const input = document.querySelector(`input[name="${inputNamePrefix}${passengerId}"]`);
+                            if (input) input.value = '';
+                            break;
+                        }
+                    }
+                } else {
+                    if (Object.keys(currentAssignments).length >= totalPassengers) {
+                        showNotification('Selection Incomplete', isSelectingReturnSeats ? 'Please select a return seat for each passenger.' : 'Please select an outbound seat for each passenger.');
+                        return;
+                    }
+
+                    for (let i = 1; i <= totalPassengers; i++) {
+                        if (!currentAssignments[i]) {
+                            currentAssignments[i] = seatNumber;
+                            seatEl.classList.add('selected');
+                            const input = document.querySelector(`input[name="${inputNamePrefix}${i}"]`);
+                            if (input) input.value = seatNumber;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            const form = document.getElementById('booking-form');
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const btn = form.querySelector('button[type="submit"]');
                 const spinner = btn.querySelector('.spinner');
                 const btnText = btn.querySelector('.btn-text');
-
-                // Manual Validation
                 const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+
                 if (paymentMethod === 'card') {
                     if (!document.getElementById('card-input').value || !document.getElementById('card-expiry').value || !document.getElementById('card-cvv').value) {
                         alert('Please fill in all card details.');
@@ -884,7 +1013,7 @@
                         return;
                     }
                 } else if (paymentMethod === 'netbanking') {
-                     if (!document.querySelector('#netbanking-details select').value) {
+                    if (!document.querySelector('#netbanking-details select').value) {
                         alert('Please select a bank.');
                         return;
                     }
@@ -895,18 +1024,20 @@
                 spinner.classList.remove('hidden');
 
                 await new Promise(r => setTimeout(r, 1500));
-
                 const passengers = [];
+
                 Array.from(passengersContainer.children).forEach((div, index) => {
                     const inputs = div.querySelectorAll('input, select');
                     let p = {};
                     const passengerId = index + 1;
+
                     inputs.forEach(input => {
                         if (input.name.startsWith('name')) p.name = input.value;
                         if (input.name.startsWith('age')) p.age = input.value;
                         if (input.name.startsWith('email')) p.email = input.value;
                         if (input.name.startsWith('phone')) p.phone = input.value;
                         if (input.name.startsWith('seat_number')) p.seat_number = input.value;
+                        if (input.name.startsWith('return_seat_number')) p.return_seat_number = input.value;
                     });
                     passengers.push(p);
                 });
@@ -916,8 +1047,12 @@
 
                     const bookResponse = await fetch('/api/flights/bookings/create/', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
                         body: JSON.stringify({
+                            trip_type: document.querySelector('input[name="trip_type"]:checked').value,
+                            return_date: document.getElementById('return-date').value,
                             user_email: user.email,
                             flight_number: flightDetails.flight_number,
                             flight_id: flightId,
@@ -933,10 +1068,8 @@
                     const result = await bookResponse.json();
 
                     if (bookResponse.ok) {
-                        const modal = document.getElementById('success-modal');
-                        document.getElementById('modal-pnr').textContent = result.booking.booking_reference;
+                        showSuccessModal(result.booking.booking_reference);
                         document.getElementById('modal-txn').textContent = result.booking.transaction_id;
-                        modal.classList.remove('hidden');
 
                         document.getElementById('modal-close-btn').addEventListener('click', () => {
                             window.location.href = '/my-trips/';
@@ -964,12 +1097,13 @@
                 cardInput.addEventListener('input', (e) => {
                     let value = e.target.value.replace(/\D/g, '');
                     let formattedValue = '';
+
                     for (let i = 0; i < value.length; i++) {
                         if (i > 0 && i % 4 === 0) formattedValue += ' ';
                         formattedValue += value[i];
                     }
-                    e.target.value = formattedValue;
 
+                    e.target.value = formattedValue;
                     cardIcon.className = 'fas fa-credit-card absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl';
 
                     if (value.startsWith('4')) {
@@ -991,6 +1125,7 @@
                 radio.addEventListener('change', (e) => {
                     const method = e.target.value;
                     paymentSections.forEach(section => section.classList.add('hidden'));
+
                     const selectedSection = document.getElementById(`${method}-details`);
                     if (selectedSection) selectedSection.classList.remove('hidden');
                 });
@@ -999,6 +1134,7 @@
 
         function getPaymentDetails() {
             const method = document.querySelector('input[name="payment_method"]:checked').value;
+
             if (method === 'card') {
                 const cardNum = document.getElementById('card-input').value;
                 return cardNum ? `**** ${cardNum.slice(-4)}` : '';
@@ -1007,7 +1143,10 @@
             } else if (method === 'netbanking') {
                 return document.querySelector('#netbanking-details select').value;
             }
+
             return '';
         }
-
     </script>
+</body>
+
+</html>
