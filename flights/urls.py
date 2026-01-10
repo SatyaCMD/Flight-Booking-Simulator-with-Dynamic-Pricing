@@ -3,7 +3,7 @@ from .views import FlightListView, FlightSearchView, AirportListView, FlightDeta
 from .auth_views import SignupView, LoginView, VerifyOTPView, ResendOTPView, UserUpdateView, CaptchaView, UserDeleteView
 from .booking_views import (
     BookingCreateView, BookingListView, BookingCheckinView, BookingCancelView, 
-    BookingReceiptView, UserStatsView, BookingDownloadReceiptView
+    BookingReceiptView, UserStatsView, BookingDownloadReceiptView, BookingTicketView
 )
 
 urlpatterns = [
@@ -21,6 +21,7 @@ urlpatterns = [
     path('bookings/check-in/', BookingCheckinView.as_view(), name='booking-checkin'),
     path('bookings/cancel/<str:booking_id>/', BookingCancelView.as_view(), name='booking-cancel'),
     path('bookings/receipt/<str:booking_id>/', BookingReceiptView.as_view(), name='booking-receipt'),
+    path('bookings/ticket/<str:booking_id>/', BookingTicketView.as_view(), name='booking-ticket'),
     path('bookings/receipt/<str:booking_id>/download/', BookingDownloadReceiptView.as_view(), name='booking-download-receipt'),
     path('bookings/', BookingListView.as_view(), name='booking-list'),
     path('user/stats/', UserStatsView.as_view(), name='user-stats'),
