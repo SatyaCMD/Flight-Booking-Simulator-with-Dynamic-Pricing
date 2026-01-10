@@ -1,5 +1,5 @@
 from dataclasses import dataclass, asdict
-from datetime import datetime
+from datetime import datetime, date
 from typing import List, Optional
 
 @dataclass
@@ -60,9 +60,15 @@ class Booking:
     payment_method: str = "Card"
     payment_details: str = ""
     status: str = "CONFIRMED"
+    trip_type: str = "one_way"
+    return_date: Optional[str] = None
+    gate: Optional[str] = None
     
     def to_dict(self):
-        return asdict(self)
+        d = asdict(self)
+        if isinstance(d.get('return_date'), date) and not isinstance(d.get('return_date'), datetime):
+            d['return_date'] = d['return_date'].strftime('%Y-%m-%d')
+        return d
 
 
 
