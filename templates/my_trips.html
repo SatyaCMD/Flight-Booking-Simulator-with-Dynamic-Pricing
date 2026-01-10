@@ -136,7 +136,7 @@
                 <a href="/terms/" class="hover:text-primary transition-colors">Terms of Service</a>
             </div>
             <div class="text-gray-500 text-sm font-bold">
-                &copy; 2025 SkyHigh Airlines. All rights reserved.
+                &copy; 2026 SkyHigh Airlines. All rights reserved.
             </div>
         </div>
     </footer>
@@ -218,8 +218,6 @@
                 bookings.forEach(booking => {
                     const card = document.createElement('div');
                     const isCancelled = booking.status === 'Cancelled';
-
-                    // Use flight departure time if available, otherwise fallback to booking date
                     const flightDate = (booking.flight_details && booking.flight_details.departure_time)
                         ? new Date(booking.flight_details.departure_time)
                         : new Date(booking.booking_date);
@@ -294,7 +292,7 @@
         });
 
         function viewTicket(ref) {
-            window.location.href = `/api/flights/bookings/receipt/${ref}/`;
+            window.location.href = `/api/flights/bookings/ticket/${ref}/`;
         }
 
         async function cancelBooking(ref) {
