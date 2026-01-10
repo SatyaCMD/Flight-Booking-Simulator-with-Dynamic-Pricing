@@ -269,6 +269,21 @@
             </div>
         </div>
 
+        <div class="grid-info">
+            <div class="info-group">
+                <label>Trip Type</label>
+                <div class="value" style="text-transform: capitalize;">
+                    {{ booking.trip_type }}
+                </div>
+            </div>
+            {% if return_date %}
+            <div class="info-group" style="text-align: right;">
+                <label>Return Date</label>
+                <div class="value">{{ return_date|date:"F d, Y"|default:return_date }}</div>
+            </div>
+            {% endif %}
+        </div>
+
         <div class="table-container">
             <table>
                 <thead>
