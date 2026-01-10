@@ -307,7 +307,7 @@
                 <a href="/terms/" class="hover:text-primary transition-colors">Terms of Service</a>
             </div>
             <div class="text-gray-500 text-sm font-bold">
-                &copy; 2025 SkyHigh Airlines. All rights reserved.
+                &copy; 2026 SkyHigh Airlines. All rights reserved.
             </div>
         </div>
     </footer>
@@ -371,7 +371,7 @@
             }
 
             try {
-                const res = await fetch('/auth/update-profile/', {
+                const res = await fetch('/api/flights/auth/update-profile/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -412,7 +412,7 @@
             const user = JSON.parse(userStr);
 
             try {
-                const res = await fetch('/auth/delete-account/', {
+                const res = await fetch('/api/flights/auth/delete-account/', {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json'
