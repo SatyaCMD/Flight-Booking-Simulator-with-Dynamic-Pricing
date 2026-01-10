@@ -64,7 +64,7 @@ class LoginView(APIView):
         if not user:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        if bcrypt.checkpw(password.encode('utf-8'), user['password']):
+        if bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8') if isinstance(user['password'], str) else user['password']):
             import random
             otp = str(random.randint(100000, 999999))
             users.update_one({'email': email}, {'$set': {'otp': otp}})
@@ -212,4 +212,8 @@ class UserDeleteView(APIView):
         if result.deleted_count == 0:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
             
+        from .repositories import BookingRepository
+        booking_repo = BookingRepository()
+        booking_repo.delete_by_user(email)
+      
         return Response({'message': 'Account deleted successfully'}, status=status.HTTP_200_OK)
