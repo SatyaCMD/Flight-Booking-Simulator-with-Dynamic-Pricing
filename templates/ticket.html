@@ -69,7 +69,6 @@
             padding: 2.5rem;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             position: relative;
             background-image: linear-gradient(135deg, #fff 0%, #fef2f2 100%);
         }
@@ -219,7 +218,7 @@
             width: 100%;
             max-width: 180px;
             margin: 0 auto;
-            margin-top: 0.7cm;
+            margin-top: 1.2cm;
             aspect-ratio: 1;
             background: white;
             padding: 0.5rem;
@@ -267,6 +266,7 @@
                 background: white;
                 padding: 0;
                 -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
 
             .pass-container {
@@ -331,6 +331,22 @@
                 </div>
             </div>
 
+            <div class="info-grid" style="margin-bottom: 2rem;">
+                <div class="info-item">
+                    <label>Trip Type</label>
+                    <div class="value" style="text-transform: capitalize;">{{ booking.trip_type }}</div>
+                </div>
+                {% if booking.return_date %}
+                <div class="info-item">
+                    <label>Return Date</label>
+                    <div class="value">
+                        {{ booking.return_date|date:"d M" }}<br>
+                        {{ booking.return_date|date:"Y" }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
             <div class="passengers">
                 <div class="passenger-details">
                     <div>
@@ -360,6 +376,15 @@
                                 ANY
                                 {% endif %}
                             </div>
+                            {% if booking.passenger_details.0.return_seat_number %}
+                            <div style="margin-top: 0.5rem;">
+                                <label style="font-size: 0.7rem; display: block; margin-bottom: 0.2rem;">Return
+                                    Seat</label>
+                                <div class="seat-badge" style="font-size: 1rem; background: #64748b;">
+                                    {{ booking.passenger_details.0.return_seat_number }}
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -411,6 +436,15 @@
                                 ANY
                                 {% endif %}
                             </div>
+                            {% if booking.passenger_details.0.return_seat_number %}
+                            <div style="margin-top: 0.5rem; border-top: 1px dashed #e2e8f0; padding-top: 0.5rem;">
+                                <label
+                                    style="font-size: 0.7rem; display: block; margin-bottom: 0.2rem; color: #94a3b8; font-weight: 600;">RETURN</label>
+                                <div class="value" style="font-size: 1rem; color: var(--dark);">
+                                    {{ booking.passenger_details.0.return_seat_number }}
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
 
