@@ -112,3 +112,6 @@ class BookingRepository:
     def get_by_user(self, email: str) -> List[Booking]:
         cursor = self.collection.find({'user_email': email}, {'_id': 0})
         return [Booking(**doc) for doc in cursor]
+
+    def delete_by_user(self, email: str):
+        self.collection.delete_many({'user_email': email})
