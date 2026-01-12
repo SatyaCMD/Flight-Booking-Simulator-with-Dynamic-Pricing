@@ -12,7 +12,7 @@ It mimics real airline pricing strategies using time-to-departure, demand, remai
 ---
 
 ## 🌐 Live Website
-**(https://skyhigh-52fh.onrender.com)**
+**(https://skyhigh.satyacmd.dev/)**
 
 ---
 
